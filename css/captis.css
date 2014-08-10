@@ -1,0 +1,45 @@
+body{
+    padding: 0;
+    margin: 0;
+}
+
+/*Toolbar*/
+#toolbar{
+    background-color: #262E2C;
+    width: 68px;
+    height: 100%;
+    position: fixed;
+    border-right: 1px solid #000000;
+    text-align: center;
+}
+
+.captis_icon{
+    color: #C7D4D0;
+    font-size: 38px;
+    margin: 20px 0 0 0;
+    display: block;
+}
+
+.captis_icon:hover{
+    color: #13AD87;
+    cursor: pointer;
+}
+
+#record{
+    color: #AD2F13;
+    font-size: 38px;
+    margin: 20px 0 0 0;
+    display: block;
+}
+
+#record:hover{
+    color: #13AD87;
+    cursor: pointer;
+}
+
+#switch{
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    margin: 0 18px 20px 17px;
+}
