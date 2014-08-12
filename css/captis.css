@@ -6,7 +6,7 @@ body{
 /*Toolbar*/
 #toolbar{
     background-color: #262E2C;
-    width: 68px;
+    width: 60px;
     height: 100%;
     position: fixed;
     border-right: 1px solid #000000;
@@ -14,8 +14,8 @@ body{
 }
 
 .captis_icon{
-    color: #C7D4D0;
-    font-size: 38px;
+    color: #D5DBD9;
+    font-size: 32px;
     margin: 20px 0 0 0;
     display: block;
 }
@@ -27,7 +27,7 @@ body{
 
 #record{
     color: #AD2F13;
-    font-size: 38px;
+    font-size: 30px;
     margin: 20px 0 0 0;
     display: block;
 }
