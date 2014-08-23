@@ -20,9 +20,12 @@ window.URL = (
     window.msURL
 );
 
+var captisMediaStream = null,
+    streaming = false;
+
 function initializeToolbar (e) {
     if (e.ctrlKey && e.keyCode == 69) {
-        document.body.innerHTML += (
+        document.getElementById('captis').innerHTML += (
             '<div id="toolbar"> \
                 <i id="camera" class="fa fa-video-camera captis_icon"></i> \
                 <i id="record" class="fa fa-circle"></i> \
@@ -33,19 +36,40 @@ function initializeToolbar (e) {
                 <i id="switch" class="fa fa-power-off captis_icon"></i> \
             </div>'
         );
-        var close = document.getElementById('switch');
         document.removeEventListener('keyup', initializeToolbar, false);
         document.addEventListener('keyup', closeToolbar, false);
-        close.addEventListener('click', closeToolbar, false);
+        document.getElementById('switch').addEventListener(
+            'click',
+            closeToolbar,
+            false
+        );
+        document.getElementById('camera').addEventListener(
+            'click',
+            mediaStream,
+            false
+        );
     }
 }
 
 function closeToolbar (e) {
+    event.stopPropagation();
     if ((e.ctrlKey && e.keyCode == 69) || e.target.id == 'switch') {
-        var toolbar = document.getElementById('toolbar'),
-            close = document.getElementById('switch');
-        close.removeEventListener('click', closeToolbar, false);
-        toolbar.outerHTML = '';
+        if (streaming) {
+            captisMediaStream.stop();
+            document.getElementById('live_stream').outerHTML = '';
+            streaming = false;
+        }
+        document.getElementById('switch').removeEventListener(
+            'click',
+            closeToolbar,
+            false
+        );
+        document.getElementById('camera').removeEventListener(
+            'click',
+            closeToolbar,
+            false
+        );
+        document.getElementById('toolbar').outerHTML = '';
         document.removeEventListener('keyup', closeToolbar, false);
         document.addEventListener('keyup', initializeToolbar, false);
     }
@@ -59,10 +83,17 @@ function mediaStream () {
                 audio: true
             },
             function (localMediaStream) {
-                var video = document.getElementById('video');
-                var blob = window.URL.createObjectURL(localMediaStream);
-                console.log(blob);
-                video.src = blob;
+                captisMediaStream = localMediaStream;
+                streaming = true;
+                document.getElementById('captis').innerHTML += (
+                    '<video id="live_stream" autoplay muted></video>'
+                );
+                document.getElementById('live_stream').src = window.URL.createObjectURL(localMediaStream);
+                document.getElementById('switch').addEventListener(
+                    'click',
+                    closeToolbar,
+                    false
+                );
             },
             function (err) {
                 console.log(err);
