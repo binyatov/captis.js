@@ -26,9 +26,6 @@ var AudioContext = window.AudioContext || window.webkitAudioContext,
 
 var captis = {stream: null,
     frames: [],
-    animation: null,
-    startTime: 0,
-    endTime: 0,
     capturing: false,
     streaming: false,
     record: null,
@@ -77,7 +74,6 @@ function closeToolbar (e) {
             captis.streaming = false;
         }
         if (captis.capturing) {
-            clearInterval(captis.animation);
             document.getElementById('polygon').outerHTML = '';
             captis.capturing = false;
         }
@@ -123,6 +119,9 @@ function mediaStream () {
                 document.getElementById('captis').innerHTML += (
                     '<video id="live_stream" autoplay muted></video>'
                 );
+                document.getElementById('captis').innerHTML += (
+                    '<canvas id="polygon"></canvas>'
+                );
                 document.getElementById('live_stream').src = window.URL.createObjectURL(localMediaStream);
                 reloadEvents();
                 document.getElementById('record').addEventListener(
@@ -143,34 +142,31 @@ function mediaStream () {
 function startRecording () {
     captis.audio.recording = true;
     event.stopPropagation();
-    document.getElementById('captis').innerHTML += (
-        '<canvas id="polygon"></canvas>'
-    );
     var video = document.getElementById('live_stream'),
         canvas = document.getElementById('polygon'),
         ctx = canvas.getContext('2d'),
         audioContext = new AudioContext(),
         gainNode = audioContext.createGain(),
         audioInput = audioContext.createMediaStreamSource(captis.stream),
-        bufferSize = 1024;
+        bufferSize = 1024,
+        index = 0;
     audioInput.connect(gainNode);
     captis.audio.processor = audioContext.createScriptProcessor(bufferSize, 1, 1);
     captis.capturing = true;
-    captis.record = new Whammy.Video(20, 1);
+    captis.record = new Whammy.Video();
     var frameWidth = video.offsetWidth - 14,
         frameHeight = video.offsetHeight - 14;
     canvas.width = frameWidth;
     canvas.height = frameHeight;
-    captis.startTime = new Date().getTime();
-    captis.animation = setInterval(function () {
-        ctx.drawImage(video, 0, 0, frameWidth, frameHeight);
-        captis.record.add(ctx);
-    }, 1000/20);
     captis.audio.processor.onaudioprocess = function (e) {
         if (!captis.audio.recording) return;
+        ctx.drawImage(video, 0, 0, frameWidth, frameHeight);
+        captis.record.add(ctx, 0);
+        //console.log('video');
         var channel = e.inputBuffer.getChannelData(0);
         channelData.push(new Float32Array(channel));
         captis.audio.recordingSize += bufferSize;
+        //console.log('audio');
     }
     gainNode.connect(captis.audio.processor);
     captis.audio.processor.connect(audioContext.destination);
@@ -204,6 +200,7 @@ function floatTo16BitPCM(output, offset, input){
 function saveMedia () {
     captis.audio.recording = false;
     event.stopPropagation();
+    clearInterval(captis.animation);
     captis.stream.stop();
     var audioData = mergeBuffers(channelData, captis.audio.recordingSize),
         buffer = new ArrayBuffer(44 + audioData.length * 2),
@@ -222,21 +219,39 @@ function saveMedia () {
     writeUTFBytes(view, 36, 'data');
     view.setUint32(40, audioData.length * 2, true);
     floatTo16BitPCM(view, 44, audioData);
-    var encodedFile = captis.record.compile(),
-        videoUrl = window.URL.createObjectURL(encodedFile),
-        blob = new Blob([view], {type: 'audio/wav'}),
+    var blob = new Blob([view], {type: 'audio/wav'}),
         audioUrl = window.URL.createObjectURL(blob);
-    document.getElementById('toolbar').innerHTML += (
-        '<a href="'+ videoUrl +'" download="video.webm"> \
-            <i class="fa fa-file-video-o"></i> \
-        </a> \
-        <a href="'+ audioUrl +'" download="audio.wav"> \
-            <i class="fa fa-file-audio-o"></i> \
-        </a> \
-        <a href="'+ ' ' +'" download="captis.json"> \
-            <i class="fa fa-file-code-o"></i> \
-        </a>'
+    document.getElementById('captis').innerHTML += (
+        '<audio id="metadata"></audio>'
     );
+    var audio = document.getElementById('metadata');
+    audio.src = audioUrl;
+    audio.onloadedmetadata = function () {
+        var vidLen = Math.floor(audio.duration / captis.record.frames.length * 1000);
+        var differ = 0;
+        var duraTion = 0;
+        for (var i = 0; i < captis.record.frames.length; i++) {
+            differ += audio.duration / captis.record.frames.length * 1000 - vidLen;
+            if (differ > 1) {
+                duraTion = vidLen + 1;
+                differ = differ - 1;
+            } else { duraTion = vidLen }
+            captis.record.frames[i].duration = duraTion;
+        }
+        var encodedFile = captis.record.compile(),
+            videoUrl = window.URL.createObjectURL(encodedFile);
+        document.getElementById('toolbar').innerHTML += (
+            '<a href="'+ videoUrl +'" download="video.webm"> \
+                <i class="fa fa-file-video-o"></i> \
+            </a> \
+            <a href="'+ audioUrl +'" download="audio.wav"> \
+                <i class="fa fa-file-audio-o"></i> \
+            </a> \
+            <a href="'+ ' ' +'" download="captis.json"> \
+                <i class="fa fa-file-code-o"></i> \
+            </a>'
+        );
+    }
 }
 
 
