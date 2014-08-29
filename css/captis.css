@@ -27,6 +27,17 @@ body{
     cursor: pointer;
 }
 
+#toolbar a i{
+    color: #D5DBD9;
+    font-size: 28px;
+    margin: 20px 0 0 0;
+    display: block;
+}
+
+#toolbar a i:hover{
+    color: #13AD87;
+}
+
 #record{
     color: #AD2F13;
     font-size: 28px;
@@ -51,6 +62,16 @@ body{
     top: 20px;
     right: 20px;
     width: 280px;
+    height: 210px;
+    border: 7px solid #262E2C;
+    border-radius: 7px;
+    z-index: 9999;
+}
+
+#polygon{
+    position: fixed;
+    top: 20px;
+    right: 320px;
     border: 7px solid #262E2C;
     border-radius: 7px;
     z-index: 9999;
