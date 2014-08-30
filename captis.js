@@ -34,6 +34,11 @@ var captis = {stream: null,
         sampleRate: 44100,
         recording: false,
         processor: null
+    },
+    impress: {
+        step: null,
+        isStep: false,
+        segments: []
     }
 }
 
@@ -65,18 +70,23 @@ function initializeToolbar (e) {
     }
 }
 
+function clearSpace () {
+    if (captis.streaming) {
+        captis.stream.stop();
+        document.getElementById('live_stream').outerHTML = '';
+        document.getElementById('timer').outerHTML = '';
+        captis.streaming = false;
+    }
+    if (captis.capturing) {
+        document.getElementById('polygon').outerHTML = '';
+        captis.capturing = false;
+    }
+}
+
 function closeToolbar (e) {
     event.stopPropagation();
     if ((e.ctrlKey && e.keyCode == 69) || e.target.id == 'switch') {
-        if (captis.streaming) {
-            captis.stream.stop();
-            document.getElementById('live_stream').outerHTML = '';
-            captis.streaming = false;
-        }
-        if (captis.capturing) {
-            document.getElementById('polygon').outerHTML = '';
-            captis.capturing = false;
-        }
+        clearSpace();
         document.getElementById('switch').removeEventListener(
             'click',
             closeToolbar,
@@ -117,7 +127,8 @@ function mediaStream () {
                 captis.stream = localMediaStream;
                 captis.streaming = true;
                 document.getElementById('captis').innerHTML += (
-                    '<video id="live_stream" autoplay muted></video>'
+                    '<video id="live_stream" autoplay muted></video> \
+                    <i id="timer"></i>'
                 );
                 document.getElementById('captis').innerHTML += (
                     '<canvas id="polygon"></canvas>'
@@ -139,16 +150,28 @@ function mediaStream () {
     }
 }
 
+function timeFormat(seconds){
+	var h = Math.floor(seconds/3600);
+	var m = Math.floor((seconds - (h * 3600)) / 60);
+	var s = Math.floor(seconds - (h * 3600) - (m * 60));
+	h = h < 10 ? "0" + h : h;
+	m = m < 10 ? "0" + m : m;
+	s = s < 10 ? "0" + s : s;
+	return h + ":" + m + ":" + s;
+}
+
 function startRecording () {
     captis.audio.recording = true;
     event.stopPropagation();
     var video = document.getElementById('live_stream'),
         canvas = document.getElementById('polygon'),
+        timer = document.getElementById('timer'),
         ctx = canvas.getContext('2d'),
         audioContext = new AudioContext(),
         gainNode = audioContext.createGain(),
         audioInput = audioContext.createMediaStreamSource(captis.stream),
         bufferSize = 1024,
+        currentTime = new Date().getTime(),
         index = 0;
     audioInput.connect(gainNode);
     captis.audio.processor = audioContext.createScriptProcessor(bufferSize, 1, 1);
@@ -160,17 +183,79 @@ function startRecording () {
     canvas.height = frameHeight;
     captis.audio.processor.onaudioprocess = function (e) {
         if (!captis.audio.recording) return;
-        ctx.drawImage(video, 0, 0, frameWidth, frameHeight);
-        captis.record.add(ctx, 0);
-        //console.log('video');
+        if (index%3 == 0) {
+            ctx.drawImage(video, 0, 0, frameWidth, frameHeight);
+            captis.record.add(ctx, 0);
+            //console.log('video');
+        }
+        index++;
         var channel = e.inputBuffer.getChannelData(0);
         channelData.push(new Float32Array(channel));
         captis.audio.recordingSize += bufferSize;
         //console.log('audio');
     }
+    video.addEventListener('timeupdate', function () {
+        timer.innerHTML = timeFormat((new Date().getTime() - currentTime)/1000);
+    }, false);
+    captureSegments(video);
     gainNode.connect(captis.audio.processor);
     captis.audio.processor.connect(audioContext.destination);
     reloadEvents();
+}
+
+function captureSegments (video) {
+    var nextStep = 0,
+        prevStep = 0;
+    window.onkeydown = function (e) {
+        setTimeout(function () {
+            if (e.keyCode == 39 && captis.impress.isStep) {
+                nextStep = 0;
+                captis.impress.isStep = false;
+                captis.impress.segments.push(
+                    {
+                        timestamp: Math.floor(video.currentTime),
+                        stepid: captis.impress.step,
+                        nextstep: nextStep,
+                    }
+                );
+                return;
+            }
+            if (e.keyCode == 39 && !captis.impress.isStep) {
+                nextStep++;
+                captis.impress.segments.push(
+                    {
+                        timestamp: Math.floor(video.currentTime),
+                        stepid: captis.impress.step,
+                        nextstep: nextStep,
+                    }
+                );
+                return;
+            }
+            if (e.keyCode == 37 && captis.impress.isStep) {
+                prevStep = 0;
+                captis.impress.isStep = false;
+                captis.impress.segments.push(
+                    {
+                        timestamp: Math.floor(video.currentTime),
+                        stepid: captis.impress.step,
+                        prevstep: prevStep,
+                    }
+                );
+                return;
+            }
+            if (e.keyCode == 37 && !captis.impress.isStep) {
+                prevStep++;
+                captis.impress.segments.push(
+                    {
+                        timestamp: Math.floor(video.currentTime),
+                        stepid: captis.impress.step,
+                        prevstep: prevStep,
+                    }
+                );
+                return;
+            }
+        }, 1000);
+    };
 }
 
 function mergeBuffers (channelBuffer, recordingLength) {
@@ -200,7 +285,7 @@ function floatTo16BitPCM(output, offset, input){
 function saveMedia () {
     captis.audio.recording = false;
     event.stopPropagation();
-    clearInterval(captis.animation);
+    clearSpace();
     captis.stream.stop();
     var audioData = mergeBuffers(channelData, captis.audio.recordingSize),
         buffer = new ArrayBuffer(44 + audioData.length * 2),
@@ -227,9 +312,9 @@ function saveMedia () {
     var audio = document.getElementById('metadata');
     audio.src = audioUrl;
     audio.onloadedmetadata = function () {
-        var vidLen = Math.floor(audio.duration / captis.record.frames.length * 1000);
-        var differ = 0;
-        var duraTion = 0;
+        var vidLen = Math.floor(audio.duration / captis.record.frames.length * 1000),
+            differ = 0,
+            duraTion = 0;
         for (var i = 0; i < captis.record.frames.length; i++) {
             differ += audio.duration / captis.record.frames.length * 1000 - vidLen;
             if (differ > 1) {
@@ -239,24 +324,30 @@ function saveMedia () {
             captis.record.frames[i].duration = duraTion;
         }
         var encodedFile = captis.record.compile(),
-            videoUrl = window.URL.createObjectURL(encodedFile);
+            videoUrl = window.URL.createObjectURL(encodedFile),
+            json = new Blob(
+                [JSON.stringify(captis.impress.segments)],
+                {type: 'application/json'}
+            ),
+            jsonUrl = window.URL.createObjectURL(json);
         document.getElementById('toolbar').innerHTML += (
-            '<a href="'+ videoUrl +'" download="video.webm"> \
+            '<a id="captislink" href="'+ videoUrl +'" download="video.webm"> \
                 <i class="fa fa-file-video-o"></i> \
             </a> \
-            <a href="'+ audioUrl +'" download="audio.wav"> \
+            <a id="captislink" href="'+ audioUrl +'" download="audio.wav"> \
                 <i class="fa fa-file-audio-o"></i> \
             </a> \
-            <a href="'+ ' ' +'" download="captis.json"> \
+            <a id="captislink" href="'+ jsonUrl +'" download="captis.json"> \
                 <i class="fa fa-file-code-o"></i> \
             </a>'
         );
+        reloadEvents();
     }
 }
 
-
-
-
-
+document.addEventListener('impress:stepenter', function (e) {
+    captis.impress.isStep = true;
+    captis.impress.step = e.target.id;
+}, false);
 
 document.addEventListener('keyup', initializeToolbar, false);

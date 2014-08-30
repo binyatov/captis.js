@@ -27,15 +27,18 @@ body{
     cursor: pointer;
 }
 
-#toolbar a i{
-    color: #D5DBD9;
+#captislink{
+    color: #13C493;
     font-size: 28px;
     margin: 20px 0 0 0;
     display: block;
+    text-decoration: none;
+    padding: 0;
 }
 
-#toolbar a i:hover{
-    color: #13AD87;
+#captislink:hover{
+    color: #D5DBD9;
+    background: none;
 }
 
 #record{
@@ -80,4 +83,15 @@ body{
 
 #metadata{
     display: none;
+}
+
+#timer{
+    position: fixed;
+    top: 25px;
+    right: 27px;
+    color: #00C483;
+    font-size: 14px;
+    z-index: 10000;
+    background-color: #262E2C;
+    padding: 2px;
 }
