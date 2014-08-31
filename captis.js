@@ -324,23 +324,37 @@ function saveMedia () {
             captis.record.frames[i].duration = duraTion;
         }
         var encodedFile = captis.record.compile(),
-            videoUrl = window.URL.createObjectURL(encodedFile),
+            //videoUrl = window.URL.createObjectURL(encodedFile),
             json = new Blob(
                 [JSON.stringify(captis.impress.segments)],
                 {type: 'application/json'}
             ),
-            jsonUrl = window.URL.createObjectURL(json);
-        document.getElementById('toolbar').innerHTML += (
-            '<a id="captislink" href="'+ videoUrl +'" download="video.webm"> \
-                <i class="fa fa-file-video-o"></i> \
-            </a> \
-            <a id="captislink" href="'+ audioUrl +'" download="audio.wav"> \
-                <i class="fa fa-file-audio-o"></i> \
-            </a> \
-            <a id="captislink" href="'+ jsonUrl +'" download="captis.json"> \
-                <i class="fa fa-file-code-o"></i> \
-            </a>'
-        );
+            //jsonUrl = window.URL.createObjectURL(json),
+            formData = new FormData();
+        formData.append('audio', blob, 'audio.wav');
+        formData.append('video', encodedFile, 'video.webm');
+        formData.append('data', json, 'captis.json');
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', 'http://localhost:3000/merge', true);
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                location.reload();
+            } else {
+                console.log('Failed to upload');
+            }
+        }
+        xhr.send(formData);
+        // document.getElementById('toolbar').innerHTML += (
+        //     '<a id="captislink" href="'+ videoUrl +'" download="video.webm"> \
+        //         <i class="fa fa-file-video-o"></i> \
+        //     </a> \
+        //     <a id="captislink" href="'+ audioUrl +'" download="audio.wav"> \
+        //         <i class="fa fa-file-audio-o"></i> \
+        //     </a> \
+        //     <a id="captislink" href="'+ jsonUrl +'" download="captis.json"> \
+        //         <i class="fa fa-file-code-o"></i> \
+        //     </a>'
+        // );
         reloadEvents();
     }
 }
