@@ -17,9 +17,7 @@ function mergeCallback(error, stdout, stderr) {
 
 
 var merge = function  (request, response) {
-    var form = new formidable.IncomingForm(),
-        data = ['audio', 'video', 'data'],
-        index = 0;
+    var form = new formidable.IncomingForm();
     form.uploadDir = __dirname + '/workspace';
     form.on('file', function (field, file) {
         fs.rename(file.path, form.uploadDir + "/" + file.name);
@@ -37,27 +35,40 @@ var merge = function  (request, response) {
 
 var serveHTTP = function  (request, response) {
     var uri = url.parse(request.url).pathname,
-        filename = path.join(process.cwd(), uri);
-    path.exists(filename, function (exists) {
-        if (!exists) {
-            response.writeHead(404, {'Content-Type': 'text/html'});
-            response.write('<h4>Not Found</h4>');
+        filename = path.join(process.cwd(), uri),
+        captisFile = uri.split('/');
+    if ((captisFile[captisFile.length - 1]) == 'captis.webm') {
+        var readStream = fs.createReadStream(filename);
+        readStream.on('open', function () {
+            readStream.pipe(response);
+        });
+        readStream.on('error', function () {
+            response.writeHead(404, {'Content-Type': 'text/plain'});
+            response.write('Not Found');
             response.end();
-            return;
-        }
-        if (fs.statSync(filename).isDirectory()) filename += '/index.html';
-        fs.readFile(filename, 'binary', function (error, file) {
-            if (error) {
-                response.writeHead(500, {'Content-Type': 'text/html'});
-                response.write('<h4>'+ error +'</h4>');
+        });
+    } else {
+        path.exists(filename, function (exists) {
+            if (!exists) {
+                response.writeHead(404, {'Content-Type': 'text/plain'});
+                response.write('Not Found');
                 response.end();
                 return;
             }
-            response.writeHead(200);
-            response.write(file, 'binary');
-            response.end();
+            if (fs.statSync(filename).isDirectory()) filename += '/index.html';
+            fs.readFile(filename, 'binary', function (error, file) {
+                if (error) {
+                    response.writeHead(500, {'Content-Type': 'text/plain'});
+                    response.write(error);
+                    response.end();
+                    return;
+                }
+                response.writeHead(200);
+                response.write(file, 'binary');
+                response.end();
+            });
         });
-    });
+    }
 }
 
 

@@ -39,6 +39,19 @@ var captis = {stream: null,
         step: null,
         isStep: false,
         segments: []
+    },
+    player: {
+        objectUrl: null,
+        ready: false,
+        timeupdate: null,
+        json: null,
+        timestamps: [],
+        isOn: false,
+        currentStep: null,
+        activeStep: null
+    },
+    segments: {
+        ready: false
     }
 }
 
@@ -150,7 +163,7 @@ function mediaStream () {
     }
 }
 
-function timeFormat(seconds){
+function timeFormat (seconds) {
 	var h = Math.floor(seconds/3600);
 	var m = Math.floor((seconds - (h * 3600)) / 60);
 	var s = Math.floor(seconds - (h * 3600) - (m * 60));
@@ -204,52 +217,51 @@ function startRecording () {
 }
 
 function captureSegments (video) {
-    var nextStep = 0,
-        prevStep = 0;
+    var subStep = 0;
     window.onkeydown = function (e) {
         setTimeout(function () {
             if (e.keyCode == 39 && captis.impress.isStep) {
-                nextStep = 0;
+                subStep = 0;
                 captis.impress.isStep = false;
                 captis.impress.segments.push(
                     {
                         timestamp: Math.floor(video.currentTime),
                         stepid: captis.impress.step,
-                        nextstep: nextStep,
+                        substep: subStep,
                     }
                 );
                 return;
             }
             if (e.keyCode == 39 && !captis.impress.isStep) {
-                nextStep++;
+                subStep++;
                 captis.impress.segments.push(
                     {
                         timestamp: Math.floor(video.currentTime),
                         stepid: captis.impress.step,
-                        nextstep: nextStep,
+                        substep: subStep,
                     }
                 );
                 return;
             }
             if (e.keyCode == 37 && captis.impress.isStep) {
-                prevStep = 0;
+                subStep = 0;
                 captis.impress.isStep = false;
                 captis.impress.segments.push(
                     {
                         timestamp: Math.floor(video.currentTime),
                         stepid: captis.impress.step,
-                        prevstep: prevStep,
+                        substep: subStep,
                     }
                 );
                 return;
             }
             if (e.keyCode == 37 && !captis.impress.isStep) {
-                prevStep++;
+                subStep--;
                 captis.impress.segments.push(
                     {
                         timestamp: Math.floor(video.currentTime),
                         stepid: captis.impress.step,
-                        prevstep: prevStep,
+                        substep: subStep,
                     }
                 );
                 return;
@@ -334,16 +346,16 @@ function saveMedia () {
         formData.append('audio', blob, 'audio.wav');
         formData.append('video', encodedFile, 'video.webm');
         formData.append('data', json, 'captis.json');
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', 'http://localhost:3000/merge', true);
-        xhr.onload = function () {
-            if (xhr.status === 200) {
+        var request = new XMLHttpRequest();
+        request.open('POST', 'http://localhost:3000/merge', true);
+        request.onload = function () {
+            if (request.status === 200) {
                 location.reload();
             } else {
                 console.log('Failed to upload');
             }
         }
-        xhr.send(formData);
+        request.send(formData);
         // document.getElementById('toolbar').innerHTML += (
         //     '<a id="captislink" href="'+ videoUrl +'" download="video.webm"> \
         //         <i class="fa fa-file-video-o"></i> \
@@ -359,9 +371,268 @@ function saveMedia () {
     }
 }
 
+
+
+//watching mode
+
+function loadVideo () {
+    var request = new XMLHttpRequest();
+    request.open('GET', 'http://localhost:3000/workspace/captis.webm', true);
+    request.responseType = "blob";
+    request.onreadystatechange = function () {
+        if (request.status === 200 && request.readyState == 4) {
+            captis.player.ready = true;
+            captis.player.objectUrl = window.URL.createObjectURL(this.response);
+        }
+    }
+    request.send();
+}
+
+function loadSegments () {
+    var request = new XMLHttpRequest();
+    request.open('GET', 'http://localhost:3000/workspace/captis.json', true);
+    request.onreadystatechange = function () {
+        if (request.status === 200 && request.readyState == 4) {
+            captis.segments.ready = true;
+            captis.player.json = JSON.parse(this.response);
+            for (var i = 0; i < captis.player.json.length; i++) {
+                captis.player.timestamps.push(captis.player.json[i].timestamp);
+            }
+        }
+    }
+    request.send();
+}
+
+function finishWatchingMode (e) {
+    if (e.ctrlKey && e.keyCode == 87 && captis.player.ready) {
+        captis.player.isOn = true;
+        document.getElementById('player').outerHTML = '';
+        document.removeEventListener('keyup', finishWatchingMode, false);
+        document.addEventListener('keyup', watchingMode, false);
+        location.reload();
+    }
+}
+////bug
+function seekSegments (time) {
+    for (var i = 0; i < captis.player.timestamps.length; i++) {
+        if (time < captis.player.timestamps[i]) {
+            captis.player.currentStep = i - 1;
+            break;
+        }
+    }
+    if (captis.player.currentStep == -1) {
+        impress().goTo(captis.player.json[0].stepid);
+        impress().prev();
+    } else {
+        if (captis.player.activeStep != captis.player.currentStep) {
+            console.log(captis.player.json[captis.player.currentStep]);
+
+            impress().goTo(captis.player.json[captis.player.currentStep].stepid);
+            for (var i = 0; i < step; i++) {
+                console.log('next');
+                impress().next();
+            }
+            captis.player.activeStep = captis.player.currentStep;
+        }
+    }
+}
+
+function playVideo (e) {
+    e.target.style.display = 'none';
+    document.getElementById('pause').style.display = 'inline';
+    document.getElementById('pause').addEventListener(
+        'click',
+        pauseVideo,
+        false
+    );
+    var video = document.getElementById('captis_made'),
+        timer = document.getElementById('ptimer'),
+        buff = document.getElementById('pbuffer'),
+        playbar = document.getElementById('playbar');
+    video.play();
+    captis.player.timeupdate = setInterval(function () {
+        seekSegments(Math.floor(video.currentTime));
+        timer.innerHTML = timeFormat(video.currentTime);
+        buff.value = video.currentTime + 5;
+        playbar.value = video.currentTime;
+        if (video.ended) {videoOnEnd();}
+    }, 1000);
+}
+
+function pauseVideo (e) {
+    clearInterval(captis.player.timeupdate);
+    var video = document.getElementById('captis_made');
+    video.pause();
+    document.getElementById('play').style.display = 'inline';
+    e.target.style.display = 'none';
+    document.getElementById('play').addEventListener(
+        'click',
+        playVideo,
+        false
+    );
+}
+
+function videoOnEnd () {
+    var video = document.getElementById('captis_made'),
+        timer = document.getElementById('ptimer'),
+        buff = document.getElementById('pbuffer'),
+        playbar = document.getElementById('playbar');
+    video.currentTime = 0;
+    timer.innerHTML = '00:00:00';
+    buff.value = 0;
+    playbar.value = 0;
+    document.getElementById('play').style.display = 'inline';
+    document.getElementById('pause').style.display = 'none';
+    document.getElementById('play').addEventListener(
+        'click',
+        playVideo,
+        false
+    );
+    clearInterval(captis.player.timeupdate);
+}
+
+function setVolume (e) {
+    var video = document.getElementById('captis_made');
+    video.volume = e.target.value;
+    if (e.target.value == 1) {
+        document.getElementById('highv').style.display = 'inline';
+        document.getElementById('lowv').style.display = 'none';
+        document.getElementById('offv').style.display = 'none';
+    }
+    if (e.target.value < 1 && e.target.value > 0) {
+        document.getElementById('highv').style.display = 'none';
+        document.getElementById('lowv').style.display = 'inline';
+        document.getElementById('offv').style.display = 'none';
+    }
+    if (e.target.value == 0) {
+        document.getElementById('highv').style.display = 'none';
+        document.getElementById('lowv').style.display = 'none';
+        document.getElementById('offv').style.display = 'inline';
+    }
+}
+
+function seekVideo (e) {
+    clearInterval(captis.player.timeupdate);
+    var video = document.getElementById('captis_made'),
+        buff = document.getElementById('pbuffer'),
+        timer = document.getElementById('ptimer'),
+        playbar = document.getElementById('playbar');
+    video.pause();
+    video.currentTime = e.target.value;
+    video.play();
+    captis.player.timeupdate = setInterval(function () {
+        seekSegments(Math.floor(video.currentTime));
+        timer.innerHTML = timeFormat(video.currentTime);
+        buff.value = video.currentTime + 5;
+        playbar.value = video.currentTime;
+        if (video.ended) {videoOnEnd();}
+    }, 1000);
+}
+
+function fullScreen (e) {
+    var video = document.getElementById('captis_made');
+    if (video.webkitRequestFullscreen) {
+        e.target.style.display = "none";
+        document.getElementById('exitfulls').style.display = "inline";
+        video.webkitRequestFullscreen();
+    }
+}
+
+function exitFullScreen (e) {
+    if (document.webkitExitFullscreen) {
+        document.getElementById('fulls').style.display = "inline";
+        e.target.style.display = "none";
+        document.webkitExitFullscreen();
+    }
+}
+
+function watchingMode (e) {
+    if (e.ctrlKey && e.keyCode == 87 && captis.player.ready && captis.segments.ready) {
+        impress().goto(captis.player.json[0].stepid);
+        impress().prev();
+        captis.player.isOn = true;
+        document.getElementById('captis').innerHTML += (
+            '<div id="player"> \
+                <video id="captis_made" preload></video> \
+                <div id="captis_controls"> \
+                    <div id="captis_player"> \
+                        <i id="play" class="fa fa-play captis_icon"></i> \
+                        <i id="pause" class="fa fa-pause captis_icon"></i> \
+                        <canvas id="segments"></canvas> \
+                        <progress value="0" id="pbuffer"></progress> \
+                        <input type="range" id="playbar" value="0"> \
+                        <i id="ptimer">00:00:00</i> \
+                        <i id="highv" class="fa fa-volume-up captis_icon"></i> \
+                        <i id="lowv" class="fa fa-volume-down captis_icon"></i> \
+                        <i id="offv" class="fa fa-volume-off captis_icon"></i> \
+                        <input type="range" id="volume" min="0" max="1" step="0.1" value="1"> \
+                        <i id="fulls" class="fa fa-eye captis_icon"></i> \
+                        <i id="exitfulls" class="fa fa-eye-slash captis_icon"></i> \
+                    </div> \
+                </div> \
+            </div>'
+        );
+        var video = document.getElementById('captis_made');
+        video.src = captis.player.objectUrl;
+        video.addEventListener('loadedmetadata', function () {
+            document.getElementById('pbuffer').setAttribute(
+                "max",
+                Math.floor(video.duration)
+            );
+            document.getElementById('playbar').setAttribute(
+                "max",
+                Math.floor(video.duration)
+            );
+            var canvas = document.getElementById('segments'),
+                ctx = canvas.getContext('2d'),
+                ratio = canvas.width / video.duration,
+                position = 0;
+            document.getElementById('play').addEventListener(
+                'click',
+                playVideo,
+                false
+            );
+            document.getElementById('exitfulls').addEventListener(
+                'click',
+                exitFullScreen,
+                false
+            );
+            document.getElementById('fulls').addEventListener(
+                'click',
+                fullScreen,
+                false
+            );
+            document.getElementById('volume').addEventListener(
+                'change',
+                setVolume,
+                false
+            );
+            document.getElementById('playbar').addEventListener(
+                'change',
+                seekVideo,
+                false
+            );
+            for (var i = 0; i < captis.player.timestamps.length; i++) {
+                var segmentWidth = Math.floor(captis.player.timestamps[i] * ratio) - 1;
+                ctx.fillStyle = '#13AD87';
+                ctx.fillRect(position, 0, segmentWidth, canvas.height);
+                ctx.fillStyle = '#A8EDDD';
+                ctx.fillRect(segmentWidth, 0, 1, canvas.height);
+                position = segmentWidth + 1;
+            }
+            document.removeEventListener('keyup', watchingMode, false);
+            document.addEventListener('keyup', finishWatchingMode, false);
+        });
+    }
+}
+
 document.addEventListener('impress:stepenter', function (e) {
     captis.impress.isStep = true;
     captis.impress.step = e.target.id;
 }, false);
 
 document.addEventListener('keyup', initializeToolbar, false);
+document.addEventListener('keyup', watchingMode, false);
+
+loadVideo();
+loadSegments();
