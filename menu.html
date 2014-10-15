@@ -1,0 +1,49 @@
+<div class="navbar navbar-fixed-top">
+    <div id="appdiv" class="navbar-inner">
+
+      <div class="container-fluid">
+
+        <!-- <a class="brand" href="#">IMMPRES</a> -->
+
+                      <p id="logo-region" class="navbar-text pull-left">
+                          <a href="/">
+                              <img src="/img/immpres_logo6.png" alt="immpres">
+                          </a>
+                      </p>
+
+                      <p class="navbar-text pull-right">
+            {{#if currentUser}}
+              <span class="usertext">Logged in as </span><a href="#profile" class="navbar-link menu-profile">{{ currentUser }}</a>
+                              &nbsp;
+              <a href='#' class='js-logout' align='right'>Log out</a>
+            {{else}}
+              <!-- <a href="#login" class="navbar-link">Log in </a> -->
+              <input type="text" id="username" name="username" placeholder="Username"/>
+              <input type="password" id="password" name="password" class='' placeholder="Password"/>
+              <button type="submit" name="Submit" value="Login" class='btn js-login'>Log in</button>
+            {{/if}}
+          </p>
+
+              <!--		<button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+
+      <div class="nav-collapse collapse">		-->
+          <ul class="nav">
+
+            <li class="menu-start"><a href="/start">Start</a></li>
+            <li class="menu-browse"><a href="/">Browse</a></li>
+            <!--<li class="menu-list"><a href="/list">List</a></li>-->
+            <li class="menu-help"><a href="/help">Help</a></li>
+            <!-- <li><a href="#contact">About</a></li> -->
+
+
+          </ul>
+              <!--</div> !--/.nav-collapse -->
+
+
+      </div>
+    </div>
+  </div>

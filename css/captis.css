@@ -88,7 +88,7 @@ body{
 #timer{
     position: fixed;
     top: 25px;
-    right: 27px;
+    right: 26px;
     color: #00C483;
     font-size: 14px;
     z-index: 10000;
@@ -173,7 +173,15 @@ body{
     width: 24px;
 }
 
-#segments, #volume{
+#segments{
+    height: 16px;
+    margin: 17px 0 17px 21px;
+    display: inline;
+    float: left;
+    border-radius: 8px;
+}
+
+#volume{
     height: 16px;
     margin: 17px 0 17px 20px;
     display: inline;
@@ -188,7 +196,7 @@ body{
     height: 16px;
     -webkit-appearance: none;
     border-radius: 8px;
-    margin: 17px 0 17px 42px;
+    margin: 17px 0 17px 44.5px;
     background: rgba(0,0,0,0.1);
 }
 #pbuffer::-webkit-progress-bar{

@@ -220,6 +220,7 @@ function captureSegments (video) {
     var subStep = 0;
     window.onkeydown = function (e) {
         setTimeout(function () {
+            console.log(captis.impress.segments);
             if (e.keyCode == 39 && captis.impress.isStep) {
                 subStep = 0;
                 captis.impress.isStep = false;
@@ -412,7 +413,7 @@ function finishWatchingMode (e) {
         location.reload();
     }
 }
-////bug
+
 function seekSegments (time) {
     for (var i = 0; i < captis.player.timestamps.length; i++) {
         if (time < captis.player.timestamps[i]) {
@@ -421,20 +422,22 @@ function seekSegments (time) {
         }
     }
     if (captis.player.currentStep == -1) {
-        impress().goTo(captis.player.json[0].stepid);
+        impress().goto(captis.player.json[0].stepid);
         impress().prev();
     } else {
         if (captis.player.activeStep != captis.player.currentStep) {
-            console.log(captis.player.json[captis.player.currentStep]);
-
-            impress().goTo(captis.player.json[captis.player.currentStep].stepid);
-            for (var i = 0; i < step; i++) {
+            impress().goto(captis.player.json[captis.player.currentStep].stepid);
+            for (var i = 0; i < captis.player.json[captis.player.currentStep].substep; i++) {
                 console.log('next');
                 impress().next();
             }
             captis.player.activeStep = captis.player.currentStep;
         }
     }
+    // var index = captis.player.timestamps.indexOf(time);
+    // if (index != -1) {
+    //     console.log(captis.player.json[index]);
+    // }
 }
 
 function playVideo (e) {
@@ -586,7 +589,8 @@ function watchingMode (e) {
             var canvas = document.getElementById('segments'),
                 ctx = canvas.getContext('2d'),
                 ratio = canvas.width / video.duration,
-                position = 0;
+                position = 0,
+                segmentWidth = 0;
             document.getElementById('play').addEventListener(
                 'click',
                 playVideo,
@@ -613,10 +617,10 @@ function watchingMode (e) {
                 false
             );
             for (var i = 0; i < captis.player.timestamps.length; i++) {
-                var segmentWidth = Math.floor(captis.player.timestamps[i] * ratio) - 1;
+                segmentWidth = Math.floor(captis.player.timestamps[i] * ratio) - 1;
                 ctx.fillStyle = '#13AD87';
                 ctx.fillRect(position, 0, segmentWidth, canvas.height);
-                ctx.fillStyle = '#A8EDDD';
+                ctx.fillStyle = '#FFF';
                 ctx.fillRect(segmentWidth, 0, 1, canvas.height);
                 position = segmentWidth + 1;
             }
