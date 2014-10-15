@@ -228,7 +228,7 @@ function captureSegments (video) {
                     {
                         timestamp: Math.floor(video.currentTime),
                         stepid: captis.impress.step,
-                        substep: subStep,
+                        next: subStep,
                     }
                 );
                 return;
@@ -239,7 +239,7 @@ function captureSegments (video) {
                     {
                         timestamp: Math.floor(video.currentTime),
                         stepid: captis.impress.step,
-                        substep: subStep,
+                        next: subStep,
                     }
                 );
                 return;
@@ -251,7 +251,7 @@ function captureSegments (video) {
                     {
                         timestamp: Math.floor(video.currentTime),
                         stepid: captis.impress.step,
-                        substep: subStep,
+                        prev: subStep,
                     }
                 );
                 return;
@@ -262,7 +262,7 @@ function captureSegments (video) {
                     {
                         timestamp: Math.floor(video.currentTime),
                         stepid: captis.impress.step,
-                        substep: subStep,
+                        prev: subStep,
                     }
                 );
                 return;
@@ -417,18 +417,25 @@ function finishWatchingMode (e) {
 function seekSegments (time) {
     for (var i = 0; i < captis.player.timestamps.length; i++) {
         if (time < captis.player.timestamps[i]) {
-            captis.player.currentStep = i - 1;
-            break;
+            if (captis.player.timestamps.length - 1 == i) {
+                captis.player.currentStep = i;
+                break;
+            } else {
+                captis.player.currentStep = i - 1;
+                break;
+            }
         }
     }
+    //TODO: must be done for all scenarios
     if (captis.player.currentStep == -1) {
         impress().goto(captis.player.json[0].stepid);
         impress().prev();
     } else {
         if (captis.player.activeStep != captis.player.currentStep) {
+            impress().goto(captis.player.json[0].stepid);
+            impress().prev();
             impress().goto(captis.player.json[captis.player.currentStep].stepid);
-            for (var i = 0; i < captis.player.json[captis.player.currentStep].substep; i++) {
-                console.log('next');
+            for (var i = 0; i < captis.player.json[captis.player.currentStep].step; i++) {
                 impress().next();
             }
             captis.player.activeStep = captis.player.currentStep;
