@@ -38,7 +38,8 @@ var captis = {stream: null,
     impress: {
         step: null,
         isStep: false,
-        segments: []
+        segments: [],
+        meta: {}
     },
     player: {
         objectUrl: null,
@@ -46,6 +47,7 @@ var captis = {stream: null,
         timeupdate: null,
         json: null,
         timestamps: [],
+        slides: [],
         isOn: false,
         currentStep: null,
         activeStep: null
@@ -217,52 +219,65 @@ function startRecording () {
 }
 
 function captureSegments (video) {
-    var subStep = 0;
+    var nextStep = 0,
+        prevStep = 0,
+        stepId = null;
     window.onkeydown = function (e) {
         setTimeout(function () {
-            console.log(captis.impress.segments);
+            //next slide
             if (e.keyCode == 39 && captis.impress.isStep) {
-                subStep = 0;
+                if (nextStep > 0) {
+                    captis.impress.meta[stepId] = nextStep;
+                }
+                nextStep = 0;
+                prevStep = 0;
                 captis.impress.isStep = false;
                 captis.impress.segments.push(
                     {
                         timestamp: Math.floor(video.currentTime),
                         stepid: captis.impress.step,
-                        next: subStep,
+                        next: nextStep,
                     }
                 );
                 return;
             }
+            //next step
             if (e.keyCode == 39 && !captis.impress.isStep) {
-                subStep++;
+                nextStep++;
+                prevStep = 0;
+                stepId = captis.impress.step;
                 captis.impress.segments.push(
                     {
                         timestamp: Math.floor(video.currentTime),
                         stepid: captis.impress.step,
-                        next: subStep,
+                        next: nextStep,
                     }
                 );
                 return;
             }
+            //prev slide
             if (e.keyCode == 37 && captis.impress.isStep) {
-                subStep = 0;
+                prevStep = 0;
+                nextStep = 0;
                 captis.impress.isStep = false;
                 captis.impress.segments.push(
                     {
                         timestamp: Math.floor(video.currentTime),
                         stepid: captis.impress.step,
-                        prev: subStep,
+                        prev: prevStep,
                     }
                 );
                 return;
             }
+            //prev step
             if (e.keyCode == 37 && !captis.impress.isStep) {
-                subStep--;
+                prevStep++;
+                nextStep = 0;
                 captis.impress.segments.push(
                     {
                         timestamp: Math.floor(video.currentTime),
                         stepid: captis.impress.step,
-                        prev: subStep,
+                        prev: prevStep,
                     }
                 );
                 return;
@@ -339,7 +354,10 @@ function saveMedia () {
         var encodedFile = captis.record.compile(),
             //videoUrl = window.URL.createObjectURL(encodedFile),
             json = new Blob(
-                [JSON.stringify(captis.impress.segments)],
+                [JSON.stringify({
+                    meta: captis.impress.meta,
+                    segments: captis.impress.segments
+                })],
                 {type: 'application/json'}
             ),
             //jsonUrl = window.URL.createObjectURL(json),
@@ -396,8 +414,11 @@ function loadSegments () {
         if (request.status === 200 && request.readyState == 4) {
             captis.segments.ready = true;
             captis.player.json = JSON.parse(this.response);
-            for (var i = 0; i < captis.player.json.length; i++) {
-                captis.player.timestamps.push(captis.player.json[i].timestamp);
+            for (var i = 0; i < captis.player.json.segments.length; i++) {
+                if (captis.player.slides.indexOf(captis.player.json.segments[i].stepid) == -1) {
+                    captis.player.slides.push(captis.player.json.segments[i].stepid);
+                }
+                captis.player.timestamps.push(captis.player.json.segments[i].timestamp);
             }
         }
     }
@@ -417,34 +438,46 @@ function finishWatchingMode (e) {
 function seekSegments (time) {
     for (var i = 0; i < captis.player.timestamps.length; i++) {
         if (time < captis.player.timestamps[i]) {
-            if (captis.player.timestamps.length - 1 == i) {
-                captis.player.currentStep = i;
-                break;
-            } else {
-                captis.player.currentStep = i - 1;
-                break;
-            }
+            captis.player.currentStep = i - 1;
+            break;
+        }
+        if (time > captis.player.timestamps[i] && (captis.player.timestamps.length - 1) == i) {
+            captis.player.currentStep = i;
+            break;
         }
     }
-    //TODO: must be done for all scenarios
     if (captis.player.currentStep == -1) {
-        impress().goto(captis.player.json[0].stepid);
-        impress().prev();
+        impress().goto('overview');
+        impress().next();
     } else {
         if (captis.player.activeStep != captis.player.currentStep) {
-            impress().goto(captis.player.json[0].stepid);
-            impress().prev();
-            impress().goto(captis.player.json[captis.player.currentStep].stepid);
-            for (var i = 0; i < captis.player.json[captis.player.currentStep].step; i++) {
+            var slide = captis.player.slides.indexOf(
+                captis.player.json.segments[captis.player.currentStep].stepid
+            );
+            if (slide > 0) {
+                impress().goto(captis.player.slides[slide - 1]);
                 impress().next();
+            } else {
+                impress().goto('overview');
+                impress().next();
+                impress().next();
+            }
+            if (captis.player.json.segments[captis.player.currentStep].next > 0) {
+                for (var i = 0; i < captis.player.json.segments[captis.player.currentStep].next; i++) {
+                    impress().next();
+                }
+            }
+            if (captis.player.json.segments[captis.player.currentStep].prev >= 0) {
+                var step = captis.player.json.meta[
+                    captis.player.json.segments[captis.player.currentStep].stepid
+                ] - captis.player.json.segments[captis.player.currentStep].prev;
+                for (var i = 0; i < step; i++) {
+                    impress().next();
+                }
             }
             captis.player.activeStep = captis.player.currentStep;
         }
     }
-    // var index = captis.player.timestamps.indexOf(time);
-    // if (index != -1) {
-    //     console.log(captis.player.json[index]);
-    // }
 }
 
 function playVideo (e) {
@@ -558,7 +591,7 @@ function exitFullScreen (e) {
 
 function watchingMode (e) {
     if (e.ctrlKey && e.keyCode == 87 && captis.player.ready && captis.segments.ready) {
-        impress().goto(captis.player.json[0].stepid);
+        impress().goto(captis.player.json.segments[0].stepid);
         impress().prev();
         captis.player.isOn = true;
         document.getElementById('captis').innerHTML += (
