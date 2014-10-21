@@ -480,9 +480,38 @@ function seekSegments (time) {
     }
 }
 
+function controlSegments (e) {
+    var video = document.getElementById('captis_made'),
+        time = 0;
+    if (e.keyCode == 39) {
+        for (var i = 0; i < captis.player.timestamps.length; i++) {
+            if (video.currentTime < captis.player.timestamps[i]) {
+                time = captis.player.timestamps[i];
+                break;
+            }
+        }
+        video.currentTime = time;
+    }
+    if (e.keyCode == 37) {
+        for (var i = 0; i < captis.player.timestamps.length; i++) {
+            if (video.currentTime < captis.player.timestamps[i]) {
+                if (i-2 < 0) {
+                    time = 0;
+                    break;
+                } else {
+                    time = captis.player.timestamps[i - 2];
+                    break;
+                }
+            }
+        }
+        video.currentTime = time;
+    }
+}
+
 function playVideo (e) {
     e.target.style.display = 'none';
     document.getElementById('pause').style.display = 'inline';
+    document.addEventListener('keydown', controlSegments, false);
     document.getElementById('pause').addEventListener(
         'click',
         pauseVideo,
