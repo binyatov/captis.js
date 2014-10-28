@@ -22,6 +22,7 @@ window.URL = (
 
 var AudioContext = window.AudioContext || window.webkitAudioContext,
     Whammy = require('Whammy'),
+    Editor = require('Editor'),
     channelData = [];
 
 var captis = {stream: null,
@@ -50,7 +51,8 @@ var captis = {stream: null,
         slides: [],
         isOn: false,
         currentStep: null,
-        activeStep: null
+        activeStep: null,
+        keypressed: false
     },
     segments: {
         ready: false
@@ -67,6 +69,7 @@ function initializeToolbar (e) {
                 <i id="save" class="fa fa-save captis_icon"></i> \
                 <i id="edit" class="fa fa-edit captis_icon"></i> \
                 <i id="update" class="fa fa-refresh captis_icon"></i> \
+                <i id="camera" class="fa fa-video-camera captis_icon"></i> \
                 <i id="switch" class="fa fa-power-off captis_icon"></i> \
             </div>'
         );
@@ -484,6 +487,7 @@ function controlSegments (e) {
     var video = document.getElementById('captis_made'),
         time = 0;
     if (e.keyCode == 39) {
+        captis.player.keypressed = true;
         for (var i = 0; i < captis.player.timestamps.length; i++) {
             if (video.currentTime < captis.player.timestamps[i]) {
                 time = captis.player.timestamps[i];
@@ -493,6 +497,7 @@ function controlSegments (e) {
         video.currentTime = time;
     }
     if (e.keyCode == 37) {
+        captis.player.keypressed = true;
         for (var i = 0; i < captis.player.timestamps.length; i++) {
             if (video.currentTime < captis.player.timestamps[i]) {
                 if (i-2 < 0) {
