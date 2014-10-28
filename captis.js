@@ -69,8 +69,8 @@ function initializeToolbar (e) {
                 <i id="record" class="fa fa-circle"></i> \
                 <i id="screen" class="fa fa-desktop captis_icon"></i> \
                 <i id="save" class="fa fa-save captis_icon"></i> \
-                <i id="edit" class="fa fa-edit captis_icon"></i> \
-                <i id="update" class="fa fa-refresh captis_icon"></i> \
+                <i id="update" class="fa fa-plus-square captis_icon"></i> \
+                <i id="edit" class="fa fa-pencil-square captis_icon"></i> \
                 <i id="switch" class="fa fa-power-off captis_icon"></i> \
             </div>'
         );

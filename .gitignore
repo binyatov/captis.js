@@ -60,6 +60,4 @@ Thumbs.db
 
 # Dev pack and built files #
 ############################
-Gruntfile.js
-package.json
 captis.json
