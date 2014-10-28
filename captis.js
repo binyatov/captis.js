@@ -69,7 +69,6 @@ function initializeToolbar (e) {
                 <i id="save" class="fa fa-save captis_icon"></i> \
                 <i id="edit" class="fa fa-edit captis_icon"></i> \
                 <i id="update" class="fa fa-refresh captis_icon"></i> \
-                <i id="camera" class="fa fa-video-camera captis_icon"></i> \
                 <i id="switch" class="fa fa-power-off captis_icon"></i> \
             </div>'
         );
