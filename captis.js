@@ -27,6 +27,7 @@ var AudioContext = window.AudioContext || window.webkitAudioContext,
 
 var captis = {stream: null,
     frames: [],
+    toolbar: false,
     capturing: false,
     streaming: false,
     record: null,
@@ -61,6 +62,7 @@ var captis = {stream: null,
 
 function initializeToolbar (e) {
     if (e.ctrlKey && e.keyCode == 69) {
+        captis.toolbar = true;
         document.getElementById('captis').innerHTML += (
             '<div id="toolbar"> \
                 <i id="camera" class="fa fa-video-camera captis_icon"></i> \
@@ -88,6 +90,19 @@ function initializeToolbar (e) {
 }
 
 function clearSpace () {
+    document.getElementById('switch').removeEventListener(
+        'click',
+        closeToolbar,
+        false
+    );
+    document.getElementById('camera').removeEventListener(
+        'click',
+        closeToolbar,
+        false
+    );
+    document.getElementById('toolbar').outerHTML = '';
+    document.removeEventListener('keyup', closeToolbar, false);
+    document.addEventListener('keyup', initializeToolbar, false);
     if (captis.streaming) {
         captis.stream.stop();
         document.getElementById('live_stream').outerHTML = '';
@@ -100,23 +115,12 @@ function clearSpace () {
     }
 }
 
+
 function closeToolbar (e) {
     event.stopPropagation();
     if ((e.ctrlKey && e.keyCode == 69) || e.target.id == 'switch') {
         clearSpace();
-        document.getElementById('switch').removeEventListener(
-            'click',
-            closeToolbar,
-            false
-        );
-        document.getElementById('camera').removeEventListener(
-            'click',
-            closeToolbar,
-            false
-        );
-        document.getElementById('toolbar').outerHTML = '';
-        document.removeEventListener('keyup', closeToolbar, false);
-        document.addEventListener('keyup', initializeToolbar, false);
+        captis.toolbar = false;
     }
 }
 
@@ -627,6 +631,9 @@ function watchingMode (e) {
         impress().goto(captis.player.json.segments[0].stepid);
         impress().prev();
         captis.player.isOn = true;
+        if (captis.toolbar) {
+            clearSpace();
+        }
         document.getElementById('captis').innerHTML += (
             '<div id="player"> \
                 <video id="captis_made" preload></video> \
