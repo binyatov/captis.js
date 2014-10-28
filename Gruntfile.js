@@ -50,6 +50,25 @@ module.exports = function(grunt) {
       }
     },
 
+    //compass
+
+    compass: {
+        dev: {
+            options: {
+                sassDir: ['sass'],
+                cssDir: ['css'],
+                environment: 'development'
+            }
+        },
+        prod: {
+            options: {
+                sassDir: ['sass'],
+                cssDir: ['css'],
+                environment: 'production'
+            }
+        }
+    },
+
     //watch
     watch: {
       options:{
@@ -61,14 +80,18 @@ module.exports = function(grunt) {
         options: {
           spawn: false
           // interrupt: true
-        },
+        }
       },
+      compass: {
+          files: ['sass/*.scss'],
+          tasks: ['compass:dev']
+      }
     }
   });
 
   // Our custom tasks.
   grunt.registerTask('default', ['build']);
-  grunt.registerTask('build', ['browserify', 'uglify', 'watch']);
+  grunt.registerTask('build', ['browserify', 'uglify', 'compass:dev', 'watch']);
 
 
   //npm tasks
