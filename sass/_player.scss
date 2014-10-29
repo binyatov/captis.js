@@ -1,0 +1,144 @@
+//Player
+#captis_made{
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 250px;
+    height: 187px;
+    border: 7px solid #262E2C;
+    border-radius: 7px;
+    z-index: 9999;
+}
+
+#captis_controls{
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 50px;
+    z-index: 2147483647;
+    background-color: #262E2C;
+}
+
+#captis_player{
+    position: relative;
+    width: 100%;
+    min-width: 700px;
+    margin-left: 20px;
+}
+
+#highv, #fulls{
+    margin: 10.5px 0 10.5px 20px;
+    display: inline;
+    float: left;
+}
+
+#lowv, #offv, #exitfulls{
+    display: none;
+    margin: 10.5px 0 10.5px 20px;
+    float: left;
+}
+
+#pause{
+    display: none;
+    margin: 10.5px 0 10.5px 0;
+    float: left;
+}
+
+#lowv, #offv{
+    width: 26px;
+}
+
+#ptimer{
+    font-size: 16px;
+    font-weight: bold;
+    display: inline;
+    float: left;
+    color: #D5DBD9;
+    margin: 13px 0 13px 20px;
+}
+
+#playbar, #volume{
+    appearance: none;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+}
+
+#segments{
+    width: calc(100% - 380px);
+    position: relative;
+}
+
+#play{
+    margin: 10.5px 0 10.5px 0;
+    display: inline;
+    float: left;
+    width: 24px;
+}
+
+#segments{
+    height: 16px;
+    margin: 17px 0 17px 21px;
+    display: inline;
+    float: left;
+    border-radius: 8px;
+}
+
+#volume{
+    height: 16px;
+    margin: 17px 0 17px 20px;
+    display: inline;
+    float: left;
+    border-radius: 8px;
+}
+
+#pbuffer{
+    position: absolute;
+    left: 0;
+    width: calc(100% - 380px);
+    height: 16px;
+    -webkit-appearance: none;
+    border-radius: 8px;
+    margin: 17px 0 17px 44.5px;
+    background: rgba(0,0,0,0.1);
+}
+#pbuffer::-webkit-progress-bar{
+    -webkit-appearance: none;
+    background: rgba(255,255,255,0);
+    border-radius: 8px;
+}
+
+#pbuffer::-webkit-progress-value{
+    -webkit-appearance: none;
+    background-color: #00BAA8;
+    border-radius: 8px;
+    background: rgba(0,0,0,0.5);
+}
+
+#volume{
+    background: #13AD87;
+    width: 100px;
+}
+
+#playbar{
+    position: absolute;
+    left: 0;
+    width: calc(100% - 380px);
+    height: 16px;
+    margin: 17px 0 17px 42px;
+    background: rgba(255,0,0,0);
+    border-radius: 8px;
+}
+
+input[type=range]:focus{
+    outline: none;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 25px;
+    height: 16px;
+    border: none;
+    border-radius: 12px;
+    background: #D5DBD9;
+}

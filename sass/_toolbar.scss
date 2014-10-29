@@ -1,0 +1,88 @@
+//Toolbar
+#toolbar{
+    background-color: #262E2C;
+    width: 54px;
+    height: 100%;
+    position: fixed;
+    border-right: 1px solid #000000;
+    text-align: center;
+    z-index: 9999;
+    pointer-events: auto;
+}
+
+.captis_icon{
+    color: #D5DBD9;
+    font-size: 28px;
+    margin: 20px 0 0 0;
+    display: block;
+}
+
+.captis_icon:hover{
+    color: #13AD87;
+    cursor: pointer;
+}
+
+#captislink{
+    color: #13C493;
+    font-size: 28px;
+    margin: 20px 0 0 0;
+    display: block;
+    text-decoration: none;
+    padding: 0;
+}
+
+#captislink:hover{
+    color: #D5DBD9;
+    background: none;
+}
+
+#record{
+    color: #AD2F13;
+    font-size: 28px;
+    margin: 15px 0 5px 0;
+    display: block;
+}
+
+#record:hover{
+    color: #13AD87;
+    cursor: pointer;
+}
+
+#switch{
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    margin: 0 15px 20px 15px;
+}
+
+#live_stream{
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 250px;
+    height: 187px;
+    border: 7px solid #262E2C;
+    border-radius: 7px;
+    z-index: 9999;
+}
+
+#polygon{
+    position: fixed;
+    top: 20px;
+    right: 320px;
+    border: 7px solid #262E2C;
+    border-radius: 7px;
+    z-index: 9999;
+    opacity: 0;
+}
+
+#timer{
+    position: fixed;
+    top: 25px;
+    right: 26px;
+    color: #00C483;
+    font-size: 14px;
+    z-index: 10000;
+    background-color: #262E2C;
+    padding: 2px;
+}

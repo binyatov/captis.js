@@ -75,7 +75,7 @@ module.exports = function(grunt) {
         livereload: true
       },
       client: {
-        files: ['vendor/**/*.js', '*.js', 'css/*.css'],
+        files: ['vendor/**/*.js', '*.js'],
         tasks: ['browserify', 'uglify'],
         options: {
           spawn: false

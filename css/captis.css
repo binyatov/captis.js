@@ -4,8 +4,7 @@ body {
   margin: 0;
 }
 
-/*Toolbar*/
-/* line 7, ../sass/captis.scss */
+/* line 2, ../sass/_toolbar.scss */
 #toolbar {
   background-color: #262E2C;
   width: 54px;
@@ -17,7 +16,7 @@ body {
   pointer-events: auto;
 }
 
-/* line 18, ../sass/captis.scss */
+/* line 13, ../sass/_toolbar.scss */
 .captis_icon {
   color: #D5DBD9;
   font-size: 28px;
@@ -25,13 +24,13 @@ body {
   display: block;
 }
 
-/* line 25, ../sass/captis.scss */
+/* line 20, ../sass/_toolbar.scss */
 .captis_icon:hover {
   color: #13AD87;
   cursor: pointer;
 }
 
-/* line 30, ../sass/captis.scss */
+/* line 25, ../sass/_toolbar.scss */
 #captislink {
   color: #13C493;
   font-size: 28px;
@@ -41,13 +40,13 @@ body {
   padding: 0;
 }
 
-/* line 39, ../sass/captis.scss */
+/* line 34, ../sass/_toolbar.scss */
 #captislink:hover {
   color: #D5DBD9;
   background: none;
 }
 
-/* line 44, ../sass/captis.scss */
+/* line 39, ../sass/_toolbar.scss */
 #record {
   color: #AD2F13;
   font-size: 28px;
@@ -55,13 +54,13 @@ body {
   display: block;
 }
 
-/* line 51, ../sass/captis.scss */
+/* line 46, ../sass/_toolbar.scss */
 #record:hover {
   color: #13AD87;
   cursor: pointer;
 }
 
-/* line 56, ../sass/captis.scss */
+/* line 51, ../sass/_toolbar.scss */
 #switch {
   position: absolute;
   left: 0;
@@ -69,7 +68,7 @@ body {
   margin: 0 15px 20px 15px;
 }
 
-/* line 63, ../sass/captis.scss */
+/* line 58, ../sass/_toolbar.scss */
 #live_stream {
   position: fixed;
   top: 20px;
@@ -81,7 +80,7 @@ body {
   z-index: 9999;
 }
 
-/* line 74, ../sass/captis.scss */
+/* line 69, ../sass/_toolbar.scss */
 #polygon {
   position: fixed;
   top: 20px;
@@ -92,12 +91,7 @@ body {
   opacity: 0;
 }
 
-/* line 84, ../sass/captis.scss */
-#metadata {
-  display: none;
-}
-
-/* line 88, ../sass/captis.scss */
+/* line 79, ../sass/_toolbar.scss */
 #timer {
   position: fixed;
   top: 25px;
@@ -109,7 +103,7 @@ body {
   padding: 2px;
 }
 
-/* line 99, ../sass/captis.scss */
+/* line 2, ../sass/_player.scss */
 #captis_made {
   position: fixed;
   top: 20px;
@@ -121,7 +115,7 @@ body {
   z-index: 9999;
 }
 
-/* line 110, ../sass/captis.scss */
+/* line 13, ../sass/_player.scss */
 #captis_controls {
   position: fixed;
   left: 0;
@@ -132,7 +126,7 @@ body {
   background-color: #262E2C;
 }
 
-/* line 120, ../sass/captis.scss */
+/* line 23, ../sass/_player.scss */
 #captis_player {
   position: relative;
   width: 100%;
@@ -140,33 +134,33 @@ body {
   margin-left: 20px;
 }
 
-/* line 127, ../sass/captis.scss */
+/* line 30, ../sass/_player.scss */
 #highv, #fulls {
   margin: 10.5px 0 10.5px 20px;
   display: inline;
   float: left;
 }
 
-/* line 133, ../sass/captis.scss */
+/* line 36, ../sass/_player.scss */
 #lowv, #offv, #exitfulls {
   display: none;
   margin: 10.5px 0 10.5px 20px;
   float: left;
 }
 
-/* line 139, ../sass/captis.scss */
+/* line 42, ../sass/_player.scss */
 #pause {
   display: none;
   margin: 10.5px 0 10.5px 0;
   float: left;
 }
 
-/* line 145, ../sass/captis.scss */
+/* line 48, ../sass/_player.scss */
 #lowv, #offv {
   width: 26px;
 }
 
-/* line 149, ../sass/captis.scss */
+/* line 52, ../sass/_player.scss */
 #ptimer {
   font-size: 16px;
   font-weight: bold;
@@ -176,20 +170,20 @@ body {
   margin: 13px 0 13px 20px;
 }
 
-/* line 158, ../sass/captis.scss */
+/* line 61, ../sass/_player.scss */
 #playbar, #volume {
   appearance: none;
   -moz-appearance: none;
   -webkit-appearance: none;
 }
 
-/* line 164, ../sass/captis.scss */
+/* line 67, ../sass/_player.scss */
 #segments {
   width: calc(100% - 380px);
   position: relative;
 }
 
-/* line 169, ../sass/captis.scss */
+/* line 72, ../sass/_player.scss */
 #play {
   margin: 10.5px 0 10.5px 0;
   display: inline;
@@ -197,7 +191,7 @@ body {
   width: 24px;
 }
 
-/* line 176, ../sass/captis.scss */
+/* line 79, ../sass/_player.scss */
 #segments {
   height: 16px;
   margin: 17px 0 17px 21px;
@@ -206,7 +200,7 @@ body {
   border-radius: 8px;
 }
 
-/* line 184, ../sass/captis.scss */
+/* line 87, ../sass/_player.scss */
 #volume {
   height: 16px;
   margin: 17px 0 17px 20px;
@@ -215,7 +209,7 @@ body {
   border-radius: 8px;
 }
 
-/* line 192, ../sass/captis.scss */
+/* line 95, ../sass/_player.scss */
 #pbuffer {
   position: absolute;
   left: 0;
@@ -227,14 +221,14 @@ body {
   background: rgba(0, 0, 0, 0.1);
 }
 
-/* line 202, ../sass/captis.scss */
+/* line 105, ../sass/_player.scss */
 #pbuffer::-webkit-progress-bar {
   -webkit-appearance: none;
   background: rgba(255, 255, 255, 0);
   border-radius: 8px;
 }
 
-/* line 208, ../sass/captis.scss */
+/* line 111, ../sass/_player.scss */
 #pbuffer::-webkit-progress-value {
   -webkit-appearance: none;
   background-color: #00BAA8;
@@ -242,13 +236,13 @@ body {
   background: rgba(0, 0, 0, 0.5);
 }
 
-/* line 215, ../sass/captis.scss */
+/* line 118, ../sass/_player.scss */
 #volume {
   background: #13AD87;
   width: 100px;
 }
 
-/* line 220, ../sass/captis.scss */
+/* line 123, ../sass/_player.scss */
 #playbar {
   position: absolute;
   left: 0;
@@ -259,12 +253,12 @@ body {
   border-radius: 8px;
 }
 
-/* line 230, ../sass/captis.scss */
+/* line 133, ../sass/_player.scss */
 input[type=range]:focus {
   outline: none;
 }
 
-/* line 234, ../sass/captis.scss */
+/* line 137, ../sass/_player.scss */
 input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
   width: 25px;
@@ -272,4 +266,9 @@ input[type="range"]::-webkit-slider-thumb {
   border: none;
   border-radius: 12px;
   background: #D5DBD9;
+}
+
+/* line 9, ../sass/captis.scss */
+#metadata {
+  display: none;
 }
