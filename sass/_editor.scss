@@ -8,3 +8,18 @@
     border-radius: 7px;
     z-index: 9999;
 }
+
+#loading{
+    position: fixed;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 9999;
+}
+
+.blur{
+    filter: blur(4px);
+    -webkit-filter: blur(4px);
+}

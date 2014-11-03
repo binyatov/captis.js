@@ -280,6 +280,23 @@ input[type="range"]::-webkit-slider-thumb {
   z-index: 9999;
 }
 
+/* line 12, ../sass/_editor.scss */
+#loading {
+  position: fixed;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  left: 0px;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 9999;
+}
+
+/* line 22, ../sass/_editor.scss */
+.blur {
+  filter: blur(4px);
+  -webkit-filter: blur(4px);
+}
+
 /* line 10, ../sass/captis.scss */
 #metadata {
   display: none;
