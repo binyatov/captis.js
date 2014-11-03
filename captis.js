@@ -22,7 +22,7 @@ window.URL = (
 
 var AudioContext = window.AudioContext || window.webkitAudioContext,
     Whammy = require('Whammy'),
-    Editor = require('Editor'),
+    Editor = require('./Editor'),
     channelData = [];
 
 var captis = {stream: null,
@@ -86,6 +86,11 @@ function initializeToolbar (e) {
             mediaStream,
             false
         );
+        document.getElementById('edit').addEventListener(
+            'click',
+            Editor.initializeEditor,
+            false
+        );
     }
 }
 
@@ -93,6 +98,11 @@ function clearSpace () {
     document.getElementById('switch').removeEventListener(
         'click',
         closeToolbar,
+        false
+    );
+    document.getElementById('edit').removeEventListener(
+        'click',
+        Editor.initializeEditor,
         false
     );
     document.getElementById('camera').removeEventListener(
@@ -420,6 +430,7 @@ function loadSegments () {
         if (request.status === 200 && request.readyState == 4) {
             captis.segments.ready = true;
             captis.player.json = JSON.parse(this.response);
+            window.segments = captis.player.json.segments;
             for (var i = 0; i < captis.player.json.segments.length; i++) {
                 if (captis.player.slides.indexOf(captis.player.json.segments[i].stepid) == -1) {
                     captis.player.slides.push(captis.player.json.segments[i].stepid);
