@@ -418,6 +418,7 @@ function loadVideo () {
         if (request.status === 200 && request.readyState == 4) {
             captis.player.ready = true;
             captis.player.objectUrl = window.URL.createObjectURL(this.response);
+            window.videoURL = captis.player.objectUrl;
         }
     }
     request.send();

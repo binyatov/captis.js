@@ -10,7 +10,7 @@ body {
   width: 54px;
   height: 100%;
   position: fixed;
-  border-right: 1px solid #000000;
+  border-right: 1px solid #222928;
   text-align: center;
   z-index: 9999;
   pointer-events: auto;
@@ -280,7 +280,7 @@ input[type="range"]::-webkit-slider-thumb {
   z-index: 9999;
 }
 
-/* line 12, ../sass/_editor.scss */
+/* line 13, ../sass/_editor.scss */
 #loading {
   position: fixed;
   top: 0px;
@@ -291,7 +291,7 @@ input[type="range"]::-webkit-slider-thumb {
   z-index: 9999;
 }
 
-/* line 22, ../sass/_editor.scss */
+/* line 23, ../sass/_editor.scss */
 #loading_segments {
   position: absolute;
   left: calc(50% - 190px);
@@ -304,19 +304,53 @@ input[type="range"]::-webkit-slider-thumb {
   background: rgba(255, 255, 255, 0.7);
 }
 
-/* line 33, ../sass/_editor.scss */
+/* line 34, ../sass/_editor.scss */
 #loading_segments::-webkit-progress-bar {
   -webkit-appearance: none;
   background: rgba(255, 255, 255, 0);
   border-radius: 10px;
 }
 
-/* line 39, ../sass/_editor.scss */
+/* line 40, ../sass/_editor.scss */
 #loading_segments::-webkit-progress-value {
   -webkit-appearance: none;
   background-color: #00BAA8;
   border-radius: 10px;
   background: #13ad87;
+}
+
+/* line 47, ../sass/_editor.scss */
+#captis_editor_segments {
+  position: fixed;
+  width: 0;
+  height: calc(100% - 13px);
+  border: 7px solid #262E2C;
+  left: 54px;
+  right: 20px;
+  top: 0;
+  bottom: 0;
+  -webkit-transition: all 0.3s linear;
+  -moz-transition: all 0.3s linear;
+  transition: all 0.3s linear;
+  overflow: hidden;
+}
+
+/* line 62, ../sass/_editor.scss */
+.segment_box {
+  display: inline-block;
+  float: left;
+  width: 100%;
+  height: 120px;
+  border-bottom: 7px solid #262E2C;
+}
+/* line 68, ../sass/_editor.scss */
+.segment_box:hover {
+  opacity: 0.7;
+}
+
+/* line 73, ../sass/_editor.scss */
+#segmentshot {
+  opacity: 0;
 }
 
 /* line 10, ../sass/captis.scss */
