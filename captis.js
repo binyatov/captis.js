@@ -191,6 +191,8 @@ function timeFormat (seconds) {
 	return h + ":" + m + ":" + s;
 }
 
+window.formatDuration = timeFormat;
+
 function startRecording () {
     captis.audio.recording = true;
     event.stopPropagation();
