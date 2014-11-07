@@ -49,7 +49,7 @@ var initializeEditor = function() {
                 for (var j = 0; j < elements.length; j++) {
                     elements[j].addEventListener('click', editorPlaySegment, false);
                 }
-                console.log(elements);
+                //console.log(elements);
             };
         }, 100);
     };
@@ -61,7 +61,22 @@ var editorPlaySegment = function () {
     var index = this.id.split('_')[1];
     video.currentTime = window.segments[index].timestamp;
     video.muted = false;
+    impress().goto('overview');
+    impress().goto(window.segments[index].stepid);
+    //TODO: All cases
+    if (window.segments[index].next) {
+        for (var i = 0; i < window.segments[index].next; i++) {
+            impress().next();
+        }
+    }
+    if (window.segments[index].prev) {
+        for (var i = 0; i < window.segments[index].prev; i++) {
+            impress().prev();
+        }
+    }
+    console.log(window.slides, window.segments[index]);
     video.play();
+
 }
 
 exports.initializeEditor = initializeEditor;

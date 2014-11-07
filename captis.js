@@ -434,6 +434,7 @@ function loadSegments () {
             captis.segments.ready = true;
             captis.player.json = JSON.parse(this.response);
             window.segments = captis.player.json.segments;
+            window.slides = captis.player.json.meta;
             for (var i = 0; i < captis.player.json.segments.length; i++) {
                 if (captis.player.slides.indexOf(captis.player.json.segments[i].stepid) == -1) {
                     captis.player.slides.push(captis.player.json.segments[i].stepid);
