@@ -56,12 +56,14 @@
     -webkit-transition: all 0.3s linear;
     -moz-transition: all 0.3s linear;
     transition: all 0.3s linear;
+    z-index: 9999;
     overflow: hidden;
+    background-color: #fff;
 }
 
 #captis_editor_segments{
     overflow-y: scroll;
-    width: 135px;
+    width: 144px;
     height: 100%;
 }
 
@@ -85,7 +87,7 @@
 .segment_time{
     position: absolute;
     bottom: 0;
-    left: 30px;
+    left: 35px;
     font-size: 16px;
     font-weight: bold;
     display: inline;
