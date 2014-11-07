@@ -10,11 +10,89 @@ var http = require('http'),
 
 
 function mergeCallback(error, stdout, stderr) {
+    // stdout ? util.print('stdout: ' + stdout) : null;
+    // stderr ? util.print('stderr: ' + stderr) : null;
+    // error ? console.log('exec error: ' + error) : null;
+    removeTracks();
+}
+
+function cutStartCallback(error, stdout, stderr) {
+    // stdout ? util.print('stdout: ' + stdout) : null;
+    // stderr ? util.print('stderr: ' + stderr) : null;
+    // error ? console.log('exec error: ' + error) : null;
+}
+
+function concatCallback(error, stdout, stderr) {
     stdout ? util.print('stdout: ' + stdout) : null;
     stderr ? util.print('stderr: ' + stderr) : null;
     error ? console.log('exec error: ' + error) : null;
+    removeParts();
 }
 
+function cutEndCallback(error, stdout, stderr) {
+    // stdout ? util.print('stdout: ' + stdout) : null;
+    // stderr ? util.print('stderr: ' + stderr) : null;
+    // error ? console.log('exec error: ' + error) : null;
+    var dir = __dirname + '/workspace';
+    fs.unlink(dir + '/captis.webm', function (err) {
+        if (err) throw err;
+        console.log('video track deleted');
+        fs.rename(dir + '/captis_new.json', dir + '/captis.json');
+        exec('ffmpeg -f concat -i '+dir+'/list.txt -c copy '+dir+'/captis.webm', concatCallback);
+    });
+}
+
+function updateCallback(error, stdout, stderr) {
+    // stdout ? util.print('stdout: ' + stdout) : null;
+    // stderr ? util.print('stderr: ' + stderr) : null;
+    // error ? console.log('exec error: ' + error) : null;
+    removeTracks();
+    removeData();
+    var dir = __dirname + '/workspace';
+    fs.readFile(dir + '/captis_new.json', 'utf8', function (err, data) {
+        if (err) throw err;
+        var obj = JSON.parse(data);
+        console.log(obj.update, obj.duration);
+        exec('ffmpeg -i '+ dir +'/captis.webm -ss 00:00:00 -to ' + obj.update[0] +' -async 1 '+ dir +'/start.webm', cutStartCallback);
+        exec('ffmpeg -i '+ dir +'/captis.webm -ss '+ obj.update[1] +' -to ' + obj.duration +' -async 1 '+ dir +'/end.webm', cutEndCallback);
+    });
+}
+
+function removeTracks () {
+    var dir = __dirname + '/workspace'
+    fs.unlink(dir + '/video.webm', function (err) {
+        if (err) throw err;
+        console.log('video track deleted');
+    });
+    fs.unlink(dir + '/audio.wav', function (err) {
+        if (err) throw err;
+        console.log('audio track deleted');
+    });
+}
+
+function removeParts () {
+    var dir = __dirname + '/workspace'
+    fs.unlink(dir + '/start.webm', function (err) {
+        if (err) throw err;
+        console.log('start track deleted');
+    });
+    fs.unlink(dir + '/new.webm', function (err) {
+        if (err) throw err;
+        console.log('new track deleted');
+    });
+    fs.unlink(dir + '/end.webm', function (err) {
+        if (err) throw err;
+        console.log('end track deleted');
+    });
+}
+
+function removeData () {
+    var dir = __dirname + '/workspace'
+    fs.unlink(dir + '/captis.json', function (err) {
+        if (err) throw err;
+        console.log('video track deleted');
+    });
+}
 
 var merge = function  (request, response) {
     var form = new formidable.IncomingForm();
@@ -23,7 +101,24 @@ var merge = function  (request, response) {
         fs.rename(file.path, form.uploadDir + "/" + file.name);
     });
     form.on('end', function () {
+        console.log('merging');
         exec('ffmpeg -i '+ form.uploadDir +'/video.webm -i '+ form.uploadDir +'/audio.wav -map 0:0 -map 1:0 '+ form.uploadDir +'/captis.webm', mergeCallback);
+        response.writeHead(200);
+        response.end();
+    });
+    form.parse(request, function (error, fields, files) {
+        console.log('uploading...');
+    });
+}
+
+var update = function  (request, response) {
+    var form = new formidable.IncomingForm();
+    form.uploadDir = __dirname + '/workspace';
+    form.on('file', function (field, file) {
+        fs.rename(file.path, form.uploadDir + "/" + file.name);
+    });
+    form.on('end', function () {
+        exec('ffmpeg -i '+ form.uploadDir +'/video.webm -i '+ form.uploadDir +'/audio.wav -map 0:0 -map 1:0 '+ form.uploadDir +'/new.webm', updateCallback);
         response.writeHead(200);
         response.end();
     });
@@ -74,6 +169,7 @@ var serveHTTP = function  (request, response) {
 
 //Routes
 routes['/merge'] = merge;
+routes['/update'] = update;
 
 function onRequest (request, response) {
     var path_name = url.parse(request.url).pathname;

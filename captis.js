@@ -63,6 +63,7 @@ var captis = {stream: null,
 function initializeToolbar (e) {
     if (e.ctrlKey && e.keyCode == 69) {
         captis.toolbar = true;
+        window.canUpdate = false;
         document.getElementById('captis').innerHTML += (
             '<div id="toolbar"> \
                 <i id="camera" class="fa fa-video-camera captis_icon"></i> \
@@ -145,7 +146,14 @@ function reloadEvents () {
         saveMedia,
         false
     );
+    document.getElementById('camera').addEventListener(
+        'click',
+        mediaStream,
+        false
+    );
 }
+
+window.reloadEvents = reloadEvents;
 
 function mediaStream () {
     if (navigator.getUserMedia) {
@@ -157,6 +165,7 @@ function mediaStream () {
             function (localMediaStream) {
                 captis.stream = localMediaStream;
                 captis.streaming = true;
+                if (window.canUpdate) { document.getElementById('edit_video').outerHTML = ''; }
                 document.getElementById('captis').innerHTML += (
                     '<video id="live_stream" autoplay muted></video> \
                     <i id="timer"></i>'
@@ -374,25 +383,53 @@ function saveMedia () {
             json = new Blob(
                 [JSON.stringify({
                     meta: captis.impress.meta,
-                    segments: captis.impress.segments
+                    segments: captis.impress.segments,
+                    duration: timeFormat(audio.duration),
                 })],
                 {type: 'application/json'}
             ),
             //jsonUrl = window.URL.createObjectURL(json),
             formData = new FormData();
-        formData.append('audio', blob, 'audio.wav');
-        formData.append('video', encodedFile, 'video.webm');
-        formData.append('data', json, 'captis.json');
-        var request = new XMLHttpRequest();
-        request.open('POST', 'http://localhost:3000/merge', true);
-        request.onload = function () {
-            if (request.status === 200) {
-                location.reload();
-            } else {
-                console.log('Failed to upload');
+        if (window.canUpdate) {
+            json = new Blob(
+                [JSON.stringify({
+                    meta: captis.player.json.meta,
+                    segments: defineShift(Math.floor(audio.duration)),
+                    duration: captis.player.json.duration,
+                    update: [timeFormat(captis.player.json.segments[window.segment].timestamp),
+                        timeFormat(captis.player.json.segments[window.segment + 1].timestamp)
+                    ]
+                })],
+                {type: 'application/json'}
+            );
+            formData.append('audio', blob, 'audio.wav');
+            formData.append('video', encodedFile, 'video.webm');
+            formData.append('data', json, 'captis_new.json');
+            var request = new XMLHttpRequest();
+            request.open('POST', 'http://localhost:3000/update', true);
+            request.onload = function () {
+                if (request.status === 200) {
+                    location.reload();
+                } else {
+                    console.log('Failed to upload');
+                }
             }
+            request.send(formData);
+        } else {
+            formData.append('audio', blob, 'audio.wav');
+            formData.append('video', encodedFile, 'video.webm');
+            formData.append('data', json, 'captis.json');
+            var request = new XMLHttpRequest();
+            request.open('POST', 'http://localhost:3000/merge', true);
+            request.onload = function () {
+                if (request.status === 200) {
+                    location.reload();
+                } else {
+                    console.log('Failed to upload');
+                }
+            }
+            request.send(formData);
         }
-        request.send(formData);
         // document.getElementById('toolbar').innerHTML += (
         //     '<a id="captislink" href="'+ videoUrl +'" download="video.webm"> \
         //         <i class="fa fa-file-video-o"></i> \
@@ -404,11 +441,30 @@ function saveMedia () {
         //         <i class="fa fa-file-code-o"></i> \
         //     </a>'
         // );
-        reloadEvents();
+        //reloadEvents();
     }
 }
 
-
+function defineShift (duration) {
+    console.log(duration);
+    var timeDiff = captis.player.json.segments[window.segment + 1].timestamp -
+        captis.player.json.segments[window.segment].timestamp,
+        shift = 0;
+    if (duration < timeDiff) {
+        shift = timeDiff - duration;
+        for (var i = 0; i < captis.player.json.segments.length; i++) {
+            if (i <= window.segment) { continue; }
+            captis.player.json.segments[i].timestamp =
+                captis.player.json.segments[i].timestamp - shift;
+        }
+        return captis.player.json.segments;
+    }
+    if (duartion > timeDiff) {
+        shift = duartion - timeDiff;
+        return shift;
+    }
+    return shift;
+}
 
 //watching mode
 

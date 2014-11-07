@@ -19,6 +19,7 @@ var initializeEditor = function() {
         canvas.height = 130;
     parts.innerHTML = '';
     video.src = window.videoURL;
+    console.log(window.segments);
     loader.setAttribute('max', window.segments.length - 1);
     video.onloadedmetadata = function () {
         var i = 0;
@@ -53,12 +54,15 @@ var initializeEditor = function() {
             };
         }, 100);
     };
+    window.reloadEvents();
 
 }
 
 var editorPlaySegment = function () {
     video = document.getElementById('edit_video');
-    var index = this.id.split('_')[1];
+    var index = parseInt(this.id.split('_')[1]);
+    window.segment = index;
+    window.canUpdate = true;
     video.currentTime = window.segments[index].timestamp;
     video.muted = false;
     impress().goto('overview');
