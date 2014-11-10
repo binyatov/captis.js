@@ -138,14 +138,14 @@ var serveHTTP = function  (request, response) {
             readStream.pipe(response);
         });
         readStream.on('error', function () {
-            response.writeHead(404, {'Content-Type': 'text/plain'});
+            response.writeHead(204, {'Content-Type': 'text/plain'});
             response.write('Not Found');
             response.end();
         });
     } else {
         path.exists(filename, function (exists) {
             if (!exists) {
-                response.writeHead(404, {'Content-Type': 'text/plain'});
+                response.writeHead(204, {'Content-Type': 'text/plain'});
                 response.write('Not Found');
                 response.end();
                 return;
