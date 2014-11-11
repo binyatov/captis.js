@@ -6,34 +6,33 @@ var http = require('http'),
     util = require('util'),
     slave = require('child_process'),
     exec = slave.exec,
-    routes = [];
+    routes = [],
+    dir = __dirname + '/media';
 
+exec('mkdir media', serverLog);
+
+function serverLog(error, stdout, stderr) {
+    stdout ? util.print('stdout: ' + stdout) : null;
+    stderr ? util.print('stderr: ' + stderr) : null;
+    error ? console.log('exec error: ' + error) : null;
+}
 
 function mergeCallback(error, stdout, stderr) {
-    // stdout ? util.print('stdout: ' + stdout) : null;
-    // stderr ? util.print('stderr: ' + stderr) : null;
-    // error ? console.log('exec error: ' + error) : null;
+    serverLog(error, stdout, stderr);
     removeTracks();
 }
 
 function cutStartCallback(error, stdout, stderr) {
-    // stdout ? util.print('stdout: ' + stdout) : null;
-    // stderr ? util.print('stderr: ' + stderr) : null;
-    // error ? console.log('exec error: ' + error) : null;
+    serverLog(error, stdout, stderr);
 }
 
 function concatCallback(error, stdout, stderr) {
-    stdout ? util.print('stdout: ' + stdout) : null;
-    stderr ? util.print('stderr: ' + stderr) : null;
-    error ? console.log('exec error: ' + error) : null;
+    serverLog(error, stdout, stderr);
     removeParts();
 }
 
 function cutEndCallback(error, stdout, stderr) {
-    // stdout ? util.print('stdout: ' + stdout) : null;
-    // stderr ? util.print('stderr: ' + stderr) : null;
-    // error ? console.log('exec error: ' + error) : null;
-    var dir = __dirname + '/workspace';
+    serverLog(error, stdout, stderr);
     fs.unlink(dir + '/captis.webm', function (err) {
         if (err) throw err;
         console.log('video track deleted');
@@ -43,12 +42,9 @@ function cutEndCallback(error, stdout, stderr) {
 }
 
 function updateCallback(error, stdout, stderr) {
-    // stdout ? util.print('stdout: ' + stdout) : null;
-    // stderr ? util.print('stderr: ' + stderr) : null;
-    // error ? console.log('exec error: ' + error) : null;
+    serverLog(error, stdout, stderr);
     removeTracks();
     removeData();
-    var dir = __dirname + '/workspace';
     fs.readFile(dir + '/captis_new.json', 'utf8', function (err, data) {
         if (err) throw err;
         var obj = JSON.parse(data);
@@ -59,7 +55,6 @@ function updateCallback(error, stdout, stderr) {
 }
 
 function removeTracks () {
-    var dir = __dirname + '/workspace'
     fs.unlink(dir + '/video.webm', function (err) {
         if (err) throw err;
         console.log('video track deleted');
@@ -71,7 +66,6 @@ function removeTracks () {
 }
 
 function removeParts () {
-    var dir = __dirname + '/workspace'
     fs.unlink(dir + '/start.webm', function (err) {
         if (err) throw err;
         console.log('start track deleted');
@@ -87,7 +81,6 @@ function removeParts () {
 }
 
 function removeData () {
-    var dir = __dirname + '/workspace'
     fs.unlink(dir + '/captis.json', function (err) {
         if (err) throw err;
         console.log('video track deleted');
@@ -96,7 +89,7 @@ function removeData () {
 
 var merge = function  (request, response) {
     var form = new formidable.IncomingForm();
-    form.uploadDir = __dirname + '/workspace';
+    form.uploadDir = dir;
     form.on('file', function (field, file) {
         fs.rename(file.path, form.uploadDir + "/" + file.name);
     });
@@ -113,7 +106,7 @@ var merge = function  (request, response) {
 
 var update = function  (request, response) {
     var form = new formidable.IncomingForm();
-    form.uploadDir = __dirname + '/workspace';
+    form.uploadDir = dir;
     form.on('file', function (field, file) {
         fs.rename(file.path, form.uploadDir + "/" + file.name);
     });

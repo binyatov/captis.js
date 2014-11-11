@@ -1,6 +1,6 @@
 {
-  "name": "captis.js",
-  "main": "dist/captis.js",
+  "name": "captis",
+  "main": "dist/captis.min.js",
   "version": "0.0.1",
   "homepage": "https://github.com/binyatov/captis.js",
   "authors": [
@@ -34,6 +34,14 @@
     "bower.json",
     "gruntfile.js",
     "package.json",
-    "README.md"
+    "server.js",
+    ".npmignore",
+    "sass",
+    "media",
+    "workspace",
+    ".sass-cache",
+    ".git",
+    "editor.js",
+    "captis.js"
   ]
 }
