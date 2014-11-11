@@ -32,7 +32,7 @@
     ".jshintignore",
     ".jshintrc",
     "bower.json",
-    "gruntfile.js",
+    "Gruntfile.js",
     "package.json",
     "server.js",
     ".npmignore",
