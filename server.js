@@ -39,7 +39,10 @@ function cutEndCallback(error, stdout, stderr) {
         if (err) throw err;
         console.log('video track deleted');
         fs.rename(dir + '/captis_new.json', dir + '/captis.json');
-        exec('ffmpeg -f concat -i '+dir+'/list.txt -c copy '+dir+'/captis.webm', concatCallback);
+        fs.writeFile(dir + '/list.txt', "file 'start.webm'\nfile 'new.webm'\nfile 'end.webm'", function(err) {
+            if (err) throw err;
+            exec('ffmpeg -f concat -i '+dir+'/list.txt -c copy '+dir+'/captis.webm', concatCallback);
+        });
     });
 }
 
