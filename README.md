@@ -14,7 +14,7 @@ Captis.js is an authoring tool for publishing impress.js slides using video comm
 
         npm install captis
 
-3. Drag and drop your impress.js slides inside the root directory and add this lines beetwen head tags:
+3. Drag and drop your impress.js slides inside the root directory and add this lines between head tags:
 
         <script src="bower_components/captis/dist/captis.min.js"></script>
         <link rel="stylesheet" type="text/css" href="bower_components/captis/css/captis.css">
@@ -34,4 +34,4 @@ Captis.js is an authoring tool for publishing impress.js slides using video comm
 
 ## License
 
-Ruby on Rails is released under the [MIT License](http://www.opensource.org/licenses/MIT).
+Captis.js is released under the [MIT License](http://www.opensource.org/licenses/MIT).
