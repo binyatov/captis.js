@@ -1,6 +1,6 @@
 {
   "name": "captis",
-  "version": "0.0.2",
+  "version": "0.0.5",
   "description": "Captis.js authoring tool  server",
   "main": "server.js",
   "dependencies": {},

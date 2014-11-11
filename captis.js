@@ -470,7 +470,7 @@ function defineShift (duration) {
 
 function loadVideo () {
     var request = new XMLHttpRequest();
-    request.open('GET', 'http://localhost:3000/workspace/captis.webm', true);
+    request.open('GET', 'http://localhost:3000/media/captis.webm', true);
     request.responseType = "blob";
     request.onreadystatechange = function () {
         if (request.status === 200 && request.readyState == 4) {
@@ -484,7 +484,7 @@ function loadVideo () {
 
 function loadSegments () {
     var request = new XMLHttpRequest();
-    request.open('GET', 'http://localhost:3000/workspace/captis.json', true);
+    request.open('GET', 'http://localhost:3000/media/captis.json', true);
     request.onreadystatechange = function () {
         if (request.status === 200 && request.readyState == 4) {
             captis.segments.ready = true;

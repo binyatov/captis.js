@@ -2,14 +2,16 @@ var http = require('http'),
     url = require('url'),
     path = require('path'),
     fs = require('fs'),
-    formidable = require('./libs/formidable');
+    //formidable = require('./libs/formidable'),
+    formidable = require('../../bower_components/captis/libs/formidable'),
     util = require('util'),
     slave = require('child_process'),
     exec = slave.exec,
     routes = [],
-    dir = __dirname + '/media';
-
-exec('mkdir media', serverLog);
+    //dir = __dirname + '/media';
+    dir = __dirname.split('node_modules')[0] + 'media';
+exec('mkdir -p ../../media', serverLog);
+//exec('mkdir media', serverLog);
 
 function serverLog(error, stdout, stderr) {
     stdout ? util.print('stdout: ' + stdout) : null;
@@ -123,7 +125,8 @@ var update = function  (request, response) {
 
 var serveHTTP = function  (request, response) {
     var uri = url.parse(request.url).pathname,
-        filename = path.join(process.cwd(), uri),
+        //filename = path.join(process.cwd(), uri),
+        filename = path.join(process.cwd().split('node_modules')[0], uri),
         captisFile = uri.split('/');
     if ((captisFile[captisFile.length - 1]) == 'captis.webm') {
         var readStream = fs.createReadStream(filename);
