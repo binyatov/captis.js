@@ -4,6 +4,11 @@ Captis.js is an authoring tool for publishing impress.js slides using video comm
 
 **Currently the project is fully functional only in webkit browsers.**
 
+## Prerequisites
+The server part has only be tested in `OS X`.
+`ffmpeg` is needed to 'stitch' the audio and video files together. For a reading on the problem and how to install ffmpeg have a look here: [http://stackoverflow.com/questions/20263131/merge-wav-audio-and-webm-video](http://stackoverflow.com/questions/20263131/merge-wav-audio-and-webm-video)
+
+
 ## Getting Started
 Captis has a client-side and a server-side component
 
@@ -30,12 +35,13 @@ Captis features a toolbar with all the necessary controls.
 
         ctr + e
 
-2. Once the toolbar is open you need to allow the user of the camera and microphone.
+2. Once the toolbar is open you need to click the camera icon to allow the use of the camera and microphone.
 3. Clicking the `REC` button allows you to start recording
 4. Clicking the `Save` button stops the recording. __NOTE__: When you click stop, the audio and video streams are going to be merged (server-side) into one file which will be injected to your presentation.
 
 ##Playback
-1. To open and close the video hit:
+1. Refresh your presentation.
+2. To open and close the video hit:
 
         ctr + w
 
