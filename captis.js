@@ -66,13 +66,16 @@ function initializeToolbar (e) {
         window.canUpdate = false;
         document.getElementById('captis').innerHTML += (
             '<div id="toolbar"> \
-                <i id="camera" class="fa fa-video-camera captis_icon"></i> \
-                <i id="record" class="fa fa-circle"></i> \
-                <i id="screen" class="fa fa-desktop captis_icon"></i> \
-                <i id="save" class="fa fa-save captis_icon"></i> \
-                <i id="update" class="fa fa-plus-square captis_icon"></i> \
-                <i id="edit" class="fa fa-pencil-square captis_icon"></i> \
-                <i id="switch" class="fa fa-power-off captis_icon"></i> \
+                <ul> \
+                    <li><i id="camera" class="fa fa-video-camera captis_icon"></i></li> \
+                    <li><i id="record" class="fa fa-circle"></i></li> \
+                    <li><i id="pauserec" class="fa fa-pause captis_icon"></i></li> \
+                    <li><i id="save" class="fa fa-save captis_icon"></i></li> \
+                    <li><i id="screen" class="fa fa-desktop captis_icon"></i></li> \
+                    <li><i id="update" class="fa fa-plus-square captis_icon"></i></li> \
+                    <li><i id="edit" class="fa fa-pencil-square captis_icon"></i></li> \
+                    <li><i id="switch" class="fa fa-power-off captis_icon"></i></li> \
+                </ul> \
             </div>'
         );
         document.removeEventListener('keyup', initializeToolbar, false);
