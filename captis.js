@@ -118,6 +118,10 @@ function clearSpace () {
     document.getElementById('toolbar').outerHTML = '';
     document.removeEventListener('keyup', closeToolbar, false);
     document.addEventListener('keyup', initializeToolbar, false);
+    var editorSegments = document.getElementById('captis_editor');
+    if (editorSegments) {
+        editorSegments.outerHTML = '';
+    }
     if (captis.streaming) {
         captis.stream.stop();
         document.getElementById('live_stream').outerHTML = '';
