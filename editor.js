@@ -15,13 +15,13 @@ var initializeEditor = function() {
         loading = document.getElementById('loading'),
         canvas = document.getElementById('segmentshot'),
         ctx = canvas.getContext('2d');
-        canvas.width = 130;
-        canvas.height = 130;
     parts.innerHTML = '';
     video.src = window.videoURL;
-    console.log(window.segments);
+    //console.log(window.segments);
     loader.setAttribute('max', window.segments.length - 1);
     video.onloadedmetadata = function () {
+        canvas.width = 250;
+        canvas.height = 187;
         var i = 0;
         var loop = setInterval(function() {
             //console.log(window.segments[i]);
@@ -31,7 +31,7 @@ var initializeEditor = function() {
                 </div>'
             );
             video.currentTime = window.segments[i].timestamp;
-            ctx.drawImage(video, 0, 0, 130, 130);
+            ctx.drawImage(video, 0, 0, 250, 187);
             var image = canvas.toDataURL(),
                 box = document.getElementById('segment_' + i);
             //console.log(image);
@@ -40,7 +40,7 @@ var initializeEditor = function() {
             i++;
             if (i == window.segments.length) {
                 //parts.style.height = 120 * window.segments.length + 'px';
-                container.style.width = '130px';
+                container.style.width = '250px';
                 loading.style.display = 'none';
                 video.style.display = 'block';
                 video.pause();
