@@ -1,10 +1,11 @@
+@import url(http://fonts.googleapis.com/css?family=Lato);
 /* line 1, ../sass/captis.scss */
 body {
   padding: 0;
   margin: 0;
 }
 
-/* line 2, ../sass/_toolbar.scss */
+/* line 3, ../sass/_toolbar.scss */
 #toolbar {
   background-color: #262E2C;
   width: 54px;
@@ -16,20 +17,20 @@ body {
   pointer-events: auto;
 }
 
-/* line 13, ../sass/_toolbar.scss */
+/* line 14, ../sass/_toolbar.scss */
 #toolbar ul {
   list-style: none;
   margin: 0;
   padding: 0;
 }
 
-/* line 19, ../sass/_toolbar.scss */
+/* line 20, ../sass/_toolbar.scss */
 #toolbar ul li {
   margin: 10px 0 0 0;
   text-align: center;
 }
 
-/* line 24, ../sass/_toolbar.scss */
+/* line 25, ../sass/_toolbar.scss */
 .captis_icon {
   color: #D5DBD9;
   font-size: 28px;
@@ -37,13 +38,13 @@ body {
   display: block;
 }
 
-/* line 31, ../sass/_toolbar.scss */
+/* line 32, ../sass/_toolbar.scss */
 .captis_icon:hover {
   color: #13AD87;
   cursor: pointer;
 }
 
-/* line 36, ../sass/_toolbar.scss */
+/* line 37, ../sass/_toolbar.scss */
 #captislink {
   color: #13C493;
   font-size: 28px;
@@ -53,13 +54,13 @@ body {
   padding: 0;
 }
 
-/* line 45, ../sass/_toolbar.scss */
+/* line 46, ../sass/_toolbar.scss */
 #captislink:hover {
   color: #D5DBD9;
   background: none;
 }
 
-/* line 50, ../sass/_toolbar.scss */
+/* line 51, ../sass/_toolbar.scss */
 #record {
   color: #AD2F13;
   font-size: 28px;
@@ -67,18 +68,18 @@ body {
   display: none;
 }
 
-/* line 57, ../sass/_toolbar.scss */
+/* line 58, ../sass/_toolbar.scss */
 #pauserec {
   display: none;
 }
 
-/* line 61, ../sass/_toolbar.scss */
+/* line 62, ../sass/_toolbar.scss */
 #record:hover {
   color: #13AD87;
   cursor: pointer;
 }
 
-/* line 66, ../sass/_toolbar.scss */
+/* line 67, ../sass/_toolbar.scss */
 #switch {
   position: absolute;
   left: 0;
@@ -86,7 +87,7 @@ body {
   margin: 0 15px 20px 15px;
 }
 
-/* line 73, ../sass/_toolbar.scss */
+/* line 74, ../sass/_toolbar.scss */
 #live_stream {
   position: fixed;
   top: 20px;
@@ -98,7 +99,7 @@ body {
   z-index: 9999;
 }
 
-/* line 84, ../sass/_toolbar.scss */
+/* line 85, ../sass/_toolbar.scss */
 #polygon {
   position: fixed;
   top: 20px;
@@ -109,7 +110,7 @@ body {
   opacity: 0;
 }
 
-/* line 94, ../sass/_toolbar.scss */
+/* line 95, ../sass/_toolbar.scss */
 #timer {
   position: fixed;
   top: 25px;
@@ -119,6 +120,48 @@ body {
   z-index: 10000;
   background-color: #262E2C;
   padding: 2px;
+}
+
+/* line 106, ../sass/_toolbar.scss */
+.tooltip {
+  position: relative;
+}
+
+/* line 110, ../sass/_toolbar.scss */
+.tooltip .tip-content {
+  font-family: 'Lato', sans-serif;
+  font-size: 16px;
+  position: absolute;
+  top: -4px;
+  width: 200px;
+  left: 62px;
+  padding: 10px;
+  color: #D5DBD9;
+  background: #262E2C;
+  opacity: 0;
+  -webkit-transition: opacity 250ms ease-out;
+  -moz-transition: opacity 250ms ease-out;
+  -ms-transition: opacity 250ms ease-out;
+  -o-transition: opacity 250ms ease-out;
+  transition: opacity 250ms ease-out;
+}
+
+/* line 128, ../sass/_toolbar.scss */
+.tooltip .tip-content:before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: -14px;
+  width: 0;
+  height: 0;
+  margin-top: -8px;
+  border: 8px solid transparent;
+  border-right-color: #262E2C;
+}
+
+/* line 140, ../sass/_toolbar.scss */
+.tooltip:hover .tip-content {
+  opacity: 1;
 }
 
 /* line 2, ../sass/_player.scss */
@@ -351,7 +394,7 @@ input[type="range"]::-webkit-slider-thumb {
   -webkit-transition: all 0.3s linear;
   -moz-transition: all 0.3s linear;
   transition: all 0.3s linear;
-  z-index: 9999;
+  z-index: 999;
   overflow: hidden;
   background-color: #fff;
 }
