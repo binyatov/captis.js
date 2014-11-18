@@ -3,9 +3,11 @@ body{
     margin: 0;
 }
 
+@import url(http://fonts.googleapis.com/css?family=Lato);
 @import "toolbar";
 @import "player";
 @import "editor";
+@import "notify";
 
 #metadata{
     display: none;

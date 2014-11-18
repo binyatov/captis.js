@@ -1,5 +1,4 @@
 //Toolbar
-@import url(http://fonts.googleapis.com/css?family=Lato);
 #toolbar{
     background-color: #262E2C;
     width: 54px;
@@ -51,12 +50,13 @@
 #record{
     color: #AD2F13;
     font-size: 28px;
-    margin: 0;
+    margin: 20px 0 0 0;
     display: none;
 }
 
 #pauserec{
     display: none;
+    margin: 20px 0 0 0;
 }
 
 #record:hover{

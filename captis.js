@@ -32,6 +32,7 @@ var captis = {stream: null,
     streaming: false,
     record: null,
     paused: false,
+    notified: false,
     audio: {
         recordingSize: 0,
         sampleRate: 44100,
@@ -79,6 +80,7 @@ function initializeToolbar (e) {
                 </ul> \
             </div>'
         );
+        notification('Captis toolbar is ready to use.');
         document.removeEventListener('keyup', initializeToolbar, false);
         document.addEventListener('keyup', closeToolbar, false);
         document.getElementById('switch').addEventListener(
@@ -97,6 +99,48 @@ function initializeToolbar (e) {
             false
         );
     }
+}
+
+function notification (msg) {
+    var noti = document.getElementById('notify');
+    if (noti) {
+        noti.outerHTML = '';
+    }
+    document.getElementById('captis').innerHTML += (
+        '<div id="notify"> \
+            '+ msg +' \
+            <i id="close_notification" class="fa fa-times"></i> \
+        </div>'
+    );
+    document.getElementById('close_notification').addEventListener(
+        'mouseup',
+        closeNotification,
+        false
+    );
+    captis.notified = false;
+    setTimeout(function () {
+        closeNotification();
+    }, 5000);
+}
+
+function closeNotification () {
+    if (captis.notified) return;
+    var noti = document.getElementById('notify'),
+        index = 1;
+    var loop = setInterval(function () {
+        noti.style.opacity = '0.' + (10 - index);
+        if (index == 10) {
+            clearInterval(loop);
+            document.getElementById('close_notification').removeEventListener(
+                'mouseup',
+                closeNotification,
+                false
+            );
+            noti.outerHTML = '';
+            captis.notified = true;
+        }
+        index++;
+    }, 60);
 }
 
 function clearSpace () {
@@ -173,6 +217,7 @@ function mediaStream () {
             function (localMediaStream) {
                 captis.stream = localMediaStream;
                 captis.streaming = true;
+                notification('Camera is on! Captis ready to capture video segments.');
                 if (window.canUpdate) { document.getElementById('edit_video').outerHTML = ''; }
                 document.getElementById('captis').innerHTML += (
                     '<video id="live_stream" autoplay muted></video> \
@@ -529,6 +574,7 @@ function loadVideo () {
             captis.player.ready = true;
             captis.player.objectUrl = window.URL.createObjectURL(this.response);
             window.videoURL = captis.player.objectUrl;
+            notification('This slide contains video file! Please use ctr+w to load the segments.');
         }
     }
     request.send();

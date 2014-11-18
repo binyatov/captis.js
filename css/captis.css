@@ -5,7 +5,7 @@ body {
   margin: 0;
 }
 
-/* line 3, ../sass/_toolbar.scss */
+/* line 2, ../sass/_toolbar.scss */
 #toolbar {
   background-color: #262E2C;
   width: 54px;
@@ -17,20 +17,20 @@ body {
   pointer-events: auto;
 }
 
-/* line 14, ../sass/_toolbar.scss */
+/* line 13, ../sass/_toolbar.scss */
 #toolbar ul {
   list-style: none;
   margin: 0;
   padding: 0;
 }
 
-/* line 20, ../sass/_toolbar.scss */
+/* line 19, ../sass/_toolbar.scss */
 #toolbar ul li {
   margin: 10px 0 0 0;
   text-align: center;
 }
 
-/* line 25, ../sass/_toolbar.scss */
+/* line 24, ../sass/_toolbar.scss */
 .captis_icon {
   color: #D5DBD9;
   font-size: 28px;
@@ -38,13 +38,13 @@ body {
   display: block;
 }
 
-/* line 32, ../sass/_toolbar.scss */
+/* line 31, ../sass/_toolbar.scss */
 .captis_icon:hover {
   color: #13AD87;
   cursor: pointer;
 }
 
-/* line 37, ../sass/_toolbar.scss */
+/* line 36, ../sass/_toolbar.scss */
 #captislink {
   color: #13C493;
   font-size: 28px;
@@ -54,23 +54,24 @@ body {
   padding: 0;
 }
 
-/* line 46, ../sass/_toolbar.scss */
+/* line 45, ../sass/_toolbar.scss */
 #captislink:hover {
   color: #D5DBD9;
   background: none;
 }
 
-/* line 51, ../sass/_toolbar.scss */
+/* line 50, ../sass/_toolbar.scss */
 #record {
   color: #AD2F13;
   font-size: 28px;
-  margin: 0;
+  margin: 20px 0 0 0;
   display: none;
 }
 
-/* line 58, ../sass/_toolbar.scss */
+/* line 57, ../sass/_toolbar.scss */
 #pauserec {
   display: none;
+  margin: 20px 0 0 0;
 }
 
 /* line 62, ../sass/_toolbar.scss */
@@ -441,7 +442,80 @@ input[type="range"]::-webkit-slider-thumb {
   padding: 0 5px 0 5px;
 }
 
-/* line 10, ../sass/captis.scss */
+@keyframes fadein {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@-moz-keyframes fadein {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@-webkit-keyframes fadein {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@-ms-keyframes fadein {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@-o-keyframes fadein {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+/* line 26, ../sass/_notify.scss */
+#notify {
+  width: 220px;
+  background-color: #262E2C;
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  color: #D5DBD9;
+  font-size: 18px;
+  padding: 15px;
+  font-family: 'Lato', sans-serif;
+  -webkit-animation: fadein 2.5s;
+  -moz-animation: fadein 2.5s;
+  -ms-animation: fadein 2.5s;
+  -o-animation: fadein 2.5s;
+  animation: fadein 2.5s;
+}
+
+/* line 44, ../sass/_notify.scss */
+#close_notification {
+  color: #D5DBD9;
+  font-size: 20px;
+  position: absolute;
+  top: 4px;
+  right: 5px;
+}
+
+/* line 52, ../sass/_notify.scss */
+#close_notification:hover {
+  color: #13AD87;
+  cursor: pointer;
+}
+
+/* line 12, ../sass/captis.scss */
 #metadata {
   display: none;
 }
