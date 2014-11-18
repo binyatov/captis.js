@@ -10,10 +10,21 @@
     pointer-events: auto;
 }
 
+#toolbar ul{
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+#toolbar ul li{
+    margin: 10px 0 0 0;
+    text-align: center;
+}
+
 .captis_icon{
     color: #D5DBD9;
     font-size: 28px;
-    margin: 20px 0 0 0;
+    margin: 0;
     display: block;
 }
 
@@ -39,8 +50,12 @@
 #record{
     color: #AD2F13;
     font-size: 28px;
-    margin: 15px 0 5px 0;
-    display: block;
+    margin: 0;
+    display: none;
+}
+
+#pauserec{
+    display: none;
 }
 
 #record:hover{

@@ -31,6 +31,7 @@ var captis = {stream: null,
     capturing: false,
     streaming: false,
     record: null,
+    paused: false,
     audio: {
         recordingSize: 0,
         sampleRate: 44100,
@@ -178,6 +179,8 @@ function mediaStream () {
                 );
                 document.getElementById('live_stream').src = window.URL.createObjectURL(localMediaStream);
                 reloadEvents();
+                document.getElementById('camera').style.display = 'none';
+                document.getElementById('record').style.display = 'block';
                 document.getElementById('record').addEventListener(
                     'click',
                     startRecording,
@@ -205,9 +208,50 @@ function timeFormat (seconds) {
 
 window.formatDuration = timeFormat;
 
+function continueRecording () {
+    captis.paused = false;
+    document.getElementById('live_stream').play();
+    document.getElementById('record').removeEventListener(
+        'click',
+        continueRecording,
+        false
+    );
+    document.getElementById('pauserec').addEventListener(
+        'click',
+        pauseRecording,
+        false
+    );
+    document.getElementById('record').style.display = 'none';
+    document.getElementById('pauserec').style.display = 'block';
+}
+
+function pauseRecording () {
+    captis.paused = true;
+    document.getElementById('live_stream').pause();
+    document.getElementById('record').removeEventListener(
+        'click',
+        startRecording,
+        false
+    );
+    document.getElementById('record').addEventListener(
+        'click',
+        continueRecording,
+        false
+    );
+    document.getElementById('record').style.display = 'block';
+    document.getElementById('pauserec').style.display = 'none';
+}
+
 function startRecording () {
     captis.audio.recording = true;
     event.stopPropagation();
+    document.getElementById('record').style.display = 'none';
+    document.getElementById('pauserec').style.display = 'block';
+    document.getElementById('pauserec').addEventListener(
+        'click',
+        pauseRecording,
+        false
+    );
     var video = document.getElementById('live_stream'),
         canvas = document.getElementById('polygon'),
         timer = document.getElementById('timer'),
@@ -227,6 +271,7 @@ function startRecording () {
     canvas.width = frameWidth;
     canvas.height = frameHeight;
     captis.audio.processor.onaudioprocess = function (e) {
+        if(captis.paused) return;
         if (!captis.audio.recording) return;
         if (index%3 == 0) {
             ctx.drawImage(video, 0, 0, frameWidth, frameHeight);
