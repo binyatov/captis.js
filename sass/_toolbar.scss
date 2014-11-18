@@ -113,7 +113,7 @@
     position: absolute;
     top: -4px;
     width: 200px;
-    left: 62px;
+    left: -262px;
     padding: 10px;
     color: #D5DBD9;
     background: #262E2C;
@@ -139,4 +139,5 @@
 
 .tooltip:hover .tip-content {
     opacity: 1;
+    left: 62px;
 }

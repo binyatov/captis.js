@@ -134,7 +134,7 @@ body {
   position: absolute;
   top: -4px;
   width: 200px;
-  left: 62px;
+  left: -262px;
   padding: 10px;
   color: #D5DBD9;
   background: #262E2C;
@@ -162,6 +162,7 @@ body {
 /* line 140, ../sass/_toolbar.scss */
 .tooltip:hover .tip-content {
   opacity: 1;
+  left: 62px;
 }
 
 /* line 2, ../sass/_player.scss */
