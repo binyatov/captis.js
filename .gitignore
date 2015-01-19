@@ -61,3 +61,6 @@ Thumbs.db
 # Dev pack and built files #
 ############################
 captis.json
+npm.json
+package.json
+bower.json
