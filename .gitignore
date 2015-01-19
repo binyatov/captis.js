@@ -31,6 +31,8 @@
 # NPM #
 #################
 node_modules/
+index_files/
+media/
 
 
 # IDE Files #
@@ -65,3 +67,4 @@ npm.json
 package.json
 bower.json
 server.js
+index.html
