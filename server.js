@@ -2,14 +2,14 @@ var http = require('http'),
     url = require('url'),
     path = require('path'),
     fs = require('fs'),
-    //formidable = require('./libs/formidable'),
-    formidable = require('../../bower_components/captis/libs/formidable'),
+    formidable = require('./libs/formidable'),
+    //formidable = require('../../bower_components/captis/libs/formidable'),
     util = require('util'),
     slave = require('child_process'),
     exec = slave.exec,
     routes = [],
-    //dir = __dirname + '/media';
-    dir = __dirname.split('node_modules')[0] + 'media';
+    dir = __dirname + '/media';
+    //dir = __dirname.split('node_modules')[0] + 'media';
 exec('mkdir -p ../../media', serverLog);
 //exec('mkdir media', serverLog);
 
