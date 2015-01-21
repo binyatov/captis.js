@@ -109,6 +109,19 @@ var merge = function  (request, response) {
     });
 }
 
+var save = function  (request, response) {
+    var form = new formidable.IncomingForm();
+    form.uploadDir = dir;
+    form.on('file', function (field, file) {
+        fs.rename(file.path, form.uploadDir + "/" + file.name);
+        response.writeHead(200);
+        response.end();
+    });
+    form.parse(request, function (error, fields, files) {
+        console.log('uploading...');
+    });
+}
+
 var update = function  (request, response) {
     var form = new formidable.IncomingForm();
     form.uploadDir = dir;
@@ -168,6 +181,7 @@ var serveHTTP = function  (request, response) {
 
 //Routes
 routes['/merge'] = merge;
+routes['/save'] = save;
 routes['/update'] = update;
 
 function onRequest (request, response) {

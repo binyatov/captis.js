@@ -571,8 +571,8 @@ function defineShift (duration) {
         }
         return captis.player.json.segments;
     }
-    if (duartion > timeDiff) {
-        shift = duartion - timeDiff;
+    if (duration > timeDiff) {
+        shift = duration - timeDiff;
         return shift;
     }
     return shift;
