@@ -4,7 +4,7 @@ var createSlideSegments = function () {
     event.stopPropagation();
     document.getElementById('captis').innerHTML += (
         '<div id="captis_add"> \
-        <video id="add_video" src="media/captis.webm" preload></video> \
+        <video id="add_video" preload controls></video> \
         <div id="segment_cont"><div id="captis_editor_segments"></div></div> \
         </div>'
     );
@@ -27,6 +27,7 @@ var createSlideSegments = function () {
     }
     container.style.width = '250px';
     document.addEventListener('click', selectSegment, false);
+    loadVideo();
 }
 var past = null;
 var selectSegment = function (e) {
@@ -53,6 +54,19 @@ var selectSegment = function (e) {
             impress().goto(slide[1]);
         }
     }
+}
+
+var loadVideo = function () {
+    var request = new XMLHttpRequest(),
+        video = document.getElementById('add_video');
+    request.open('GET', 'http://localhost:3000/media/captis.webm', true);
+    request.responseType = "blob";
+    request.onreadystatechange = function () {
+        if (request.status === 200 && request.readyState == 4) {
+            video.src = window.URL.createObjectURL(this.response);
+        }
+    }
+    request.send();
 }
 
 exports.createSlideSegments = createSlideSegments;

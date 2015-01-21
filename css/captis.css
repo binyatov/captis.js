@@ -322,11 +322,16 @@ body {
 }
 
 /* line 133, ../sass/_player.scss */
+.canvas_add {
+  background-color: #00BAA8;
+}
+
+/* line 137, ../sass/_player.scss */
 input[type=range]:focus {
   outline: none;
 }
 
-/* line 137, ../sass/_player.scss */
+/* line 141, ../sass/_player.scss */
 input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
   width: 25px;
