@@ -3,7 +3,7 @@ var initializeEditor = function() {
     document.getElementById('captis').innerHTML += (
         '<div id="captis_editor"> \
             <div id="loading"><progress id="loading_segments" value="0"></progress></div> \
-            <video id="edit_video" preload autoplay muted></video> \
+            <video id="edit_video" preload muted></video> \
             <div id="segment_cont"><div id="captis_editor_segments"></div></div> \
             <canvas id="segmentshot"></canvas> \
         </div>'

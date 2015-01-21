@@ -23,6 +23,7 @@ window.URL = (
 var AudioContext = window.AudioContext || window.webkitAudioContext,
     Whammy = require('Whammy'),
     Editor = require('./Editor'),
+    Add = require('./Add'),
     channelData = [];
 
 var captis = {stream: null,
@@ -73,9 +74,9 @@ function initializeToolbar (e) {
                     <li><i id="record" class="fa fa-circle tooltip"><span class="tip-content">Record video</span></i></li> \
                     <li><i id="pauserec" class="fa fa-pause captis_icon tooltip"><span class="tip-content">Pause video recording</span></i></li> \
                     <li><i id="save" class="fa fa-save captis_icon tooltip"><span class="tip-content">Save video</span></i></li> \
-                    <li><i id="screen" class="fa fa-desktop captis_icon tooltip"><span class="tip-content">Record your desktop</span></i></li> \
                     <li><i id="update" class="fa fa-plus-square captis_icon tooltip"><span class="tip-content">Add segments to video</span></i></li> \
                     <li><i id="edit" class="fa fa-pencil-square captis_icon tooltip"><span class="tip-content">Edit video segments</span></i></li> \
+                    <li><i id="bind" class="fa fa-link captis_icon tooltip"><span class="tip-content">Bind segment</span></i></li> \
                     <li><i id="switch" class="fa fa-power-off captis_icon tooltip"><span class="tip-content">Close toolbar</span></i></li> \
                 </ul> \
             </div>'
@@ -96,6 +97,11 @@ function initializeToolbar (e) {
         document.getElementById('edit').addEventListener(
             'click',
             Editor.initializeEditor,
+            false
+        );
+        document.getElementById('update').addEventListener(
+            'click',
+            Add.createSlideSegments,
             false
         );
     }
@@ -154,6 +160,11 @@ function clearSpace () {
         Editor.initializeEditor,
         false
     );
+    document.getElementById('update').removeEventListener(
+        'click',
+        Add.createSlideSegments,
+        false
+    );
     document.getElementById('camera').removeEventListener(
         'click',
         closeToolbar,
@@ -162,9 +173,13 @@ function clearSpace () {
     document.getElementById('toolbar').outerHTML = '';
     document.removeEventListener('keyup', closeToolbar, false);
     document.addEventListener('keyup', initializeToolbar, false);
-    var editorSegments = document.getElementById('captis_editor');
+    var editorSegments = document.getElementById('captis_editor'),
+        addSegments = document.getElementById('captis_add');
     if (editorSegments) {
         editorSegments.outerHTML = '';
+    }
+    if (addSegments) {
+        addSegments.outerHTML = '';
     }
     if (captis.streaming) {
         captis.stream.stop();

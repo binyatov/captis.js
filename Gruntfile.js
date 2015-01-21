@@ -26,6 +26,10 @@ module.exports = function(grunt) {
               path: 'editor.js',
               exports: "Editor"
             },
+            Add:{
+                path: 'add.js',
+                exports: "Add"
+            },
           }
        }
       }

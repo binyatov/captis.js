@@ -10,8 +10,8 @@ var http = require('http'),
     routes = [],
     dir = __dirname + '/media';
     //dir = __dirname.split('node_modules')[0] + 'media';
-exec('mkdir -p ../../media', serverLog);
-//exec('mkdir media', serverLog);
+//exec('mkdir -p ../../media', serverLog);
+exec('mkdir media', serverLog);
 
 function serverLog(error, stdout, stderr) {
     stdout ? util.print('stdout: ' + stdout) : null;
