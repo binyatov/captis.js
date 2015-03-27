@@ -2,6 +2,8 @@
 
 Captis.js is an authoring tool for publishing impress.js slides using video commentary. With captis you can record and edit your videos using browser.
 
+For detailed user guide please visit [http://binyatov.com/guide.pdf](http://binyatov.com/guide.pdf)
+
 **Currently the project is fully functional only in webkit browsers.**
 
 ## Prerequisites
